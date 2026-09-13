@@ -1,0 +1,631 @@
+{
+  "version": "2.0",
+  "lastUpdated": "2026-09-13T11:36:12.885Z",
+  "activeFeatures": [
+    "response",
+    "exception",
+    "domain",
+    "repository",
+    "config",
+    "escapelink",
+    "security",
+    "dto",
+    "service",
+    "controller",
+    "websocket",
+    "support",
+    "quiz",
+    "tmp"
+  ],
+  "primaryFeature": "response",
+  "features": {
+    "response": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:39:01.407Z",
+        "lastUpdated": "2026-09-13T06:39:01.407Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/global/response/ApiResponse.java"
+    },
+    "exception": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:39:10.655Z",
+        "lastUpdated": "2026-09-13T06:39:25.370Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/global/exception/GlobalExceptionHandler.java"
+    },
+    "domain": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:39:56.312Z",
+        "lastUpdated": "2026-09-13T09:01:33.904Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/quiz/domain/Quiz.java"
+    },
+    "repository": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:40:54.317Z",
+        "lastUpdated": "2026-09-13T06:46:04.341Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/quiz/repository/QuizProgressRepository.java"
+    },
+    "config": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:42:16.001Z",
+        "lastUpdated": "2026-09-13T11:32:34.868Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/global/config/SecurityConfig.java"
+    },
+    "escapelink": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:42:26.896Z",
+        "lastUpdated": "2026-09-13T09:17:24.161Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/test/java/com/stw/escapelink/EscapeLinkApplicationTests.java"
+    },
+    "security": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:42:30.264Z",
+        "lastUpdated": "2026-09-13T09:02:27.926Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/global/security/RestAccessDeniedHandler.java"
+    },
+    "dto": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:43:25.963Z",
+        "lastUpdated": "2026-09-13T06:47:51.076Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/global/websocket/dto/QuizCompletedMessage.java"
+    },
+    "service": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:43:39.609Z",
+        "lastUpdated": "2026-09-13T09:59:47.576Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/quiz/service/QuizAnswerService.java"
+    },
+    "controller": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:44:00.453Z",
+        "lastUpdated": "2026-09-13T06:47:05.973Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/quiz/controller/QuizController.java"
+    },
+    "websocket": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:47:32.117Z",
+        "lastUpdated": "2026-09-13T11:36:12.885Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/global/websocket/TeamSessionHandshakeInterceptor.java"
+    },
+    "support": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:48:34.387Z",
+        "lastUpdated": "2026-09-13T09:20:29.017Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/test/java/com/stw/escapelink/support/AbstractIntegrationTest.java"
+    },
+    "quiz": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T06:49:15.551Z",
+        "lastUpdated": "2026-09-13T09:14:09.393Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/src/test/java/com/stw/escapelink/quiz/QuizAnswerServiceConcurrencyTest.java"
+    },
+    "tmp": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-13T09:58:48.460Z",
+        "lastUpdated": "2026-09-13T11:35:32.579Z"
+      },
+      "lastFile": "/tmp/ws_cross_team_test.py"
+    }
+  },
+  "pipeline": {
+    "currentPhase": 1,
+    "level": "Dynamic",
+    "phaseHistory": []
+  },
+  "session": {
+    "startedAt": "2026-09-13T06:28:02.200Z",
+    "onboardingCompleted": false,
+    "lastActivity": "2026-09-13T11:36:12.885Z"
+  },
+  "history": [
+    {
+      "timestamp": "2026-09-13T06:39:01.407Z",
+      "feature": "response",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:39:10.655Z",
+      "feature": "exception",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:39:16.372Z",
+      "feature": "exception",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:39:25.370Z",
+      "feature": "exception",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:39:56.312Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:03.119Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:14.493Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:21.262Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:25.459Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:26.196Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:34.530Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:40.419Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:51.119Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:54.317Z",
+      "feature": "repository",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:55.580Z",
+      "feature": "repository",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:57.036Z",
+      "feature": "repository",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:40:58.677Z",
+      "feature": "repository",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:41:00.251Z",
+      "feature": "repository",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:41:04.082Z",
+      "feature": "repository",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:42:16.001Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:42:17.702Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:42:26.896Z",
+      "feature": "escapelink",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:42:30.264Z",
+      "feature": "security",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:42:31.672Z",
+      "feature": "security",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:42:36.600Z",
+      "feature": "security",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:42:44.987Z",
+      "feature": "security",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:42:53.343Z",
+      "feature": "security",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:42:56.545Z",
+      "feature": "security",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:43:10.123Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:43:25.963Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:43:27.673Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:43:28.992Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:43:39.609Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:43:48.975Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:44:00.453Z",
+      "feature": "controller",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:44:05.033Z",
+      "feature": "controller",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:44:19.494Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:45:45.060Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:45:49.416Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:46:04.341Z",
+      "feature": "repository",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:46:07.881Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:46:09.457Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:46:10.477Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:46:11.569Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:46:19.062Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:46:28.667Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:46:43.856Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:46:57.607Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:47:05.973Z",
+      "feature": "controller",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:47:32.117Z",
+      "feature": "websocket",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:47:40.114Z",
+      "feature": "websocket",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:47:47.328Z",
+      "feature": "websocket",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:47:51.076Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:47:56.436Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:48:34.387Z",
+      "feature": "support",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T06:49:15.551Z",
+      "feature": "quiz",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T09:01:08.777Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T09:01:17.796Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T09:01:33.904Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T09:02:20.860Z",
+      "feature": "security",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T09:02:27.926Z",
+      "feature": "security",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T09:14:09.393Z",
+      "feature": "quiz",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T09:17:24.161Z",
+      "feature": "escapelink",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T09:20:29.017Z",
+      "feature": "support",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T09:58:48.460Z",
+      "feature": "tmp",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T09:59:47.576Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T11:32:34.869Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T11:35:32.579Z",
+      "feature": "tmp",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-13T11:36:12.885Z",
+      "feature": "websocket",
+      "phase": "do",
+      "action": "updated"
+    }
+  ]
+}
