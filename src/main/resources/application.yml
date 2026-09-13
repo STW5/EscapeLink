@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: EscapeLink
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+escapelink:
+  upload:
+    root-path: ${ESCAPELINK_UPLOAD_ROOT:/srv/escapelink/uploads}
+    max-file-size-bytes: 2097152
+    allowed-content-types: image/jpeg,image/webp,image/png
+  quiz:
+    answer-cooldown-seconds: 10
+  admin:
+    cookie-name: ESCAPELINK_ADMIN
+  team-session:
+    cookie-name: ESCAPELINK_TEAM_SESSION
+    ttl-hours: 24
+
+springdoc:
+  swagger-ui:
+    path: /docs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never

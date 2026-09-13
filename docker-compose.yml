@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: escapelink-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-escapelink}
+      POSTGRES_USER: ${DB_USERNAME:-escapelink}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-escapelink}
+    ports:
+      - "${DB_HOST_PORT:-5432}:5432"
+    volumes:
+      - escapelink-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-escapelink}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  escapelink-postgres-data:
