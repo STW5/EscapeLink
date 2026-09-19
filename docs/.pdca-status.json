@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-09-13T11:36:12.885Z",
+  "lastUpdated": "2026-09-19T04:27:25.684Z",
   "activeFeatures": [
     "response",
     "exception",
@@ -15,7 +15,11 @@
     "websocket",
     "support",
     "quiz",
-    "tmp"
+    "tmp",
+    "frontend",
+    "join",
+    "quizzes",
+    "pw-verify"
   ],
   "primaryFeature": "response",
   "features": {
@@ -80,9 +84,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:42:16.001Z",
-        "lastUpdated": "2026-09-13T11:32:34.868Z"
+        "lastUpdated": "2026-09-19T04:07:20.671Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/global/config/SecurityConfig.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/global/config/SecurityConfig.java"
     },
     "escapelink": {
       "phase": "do",
@@ -119,9 +123,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:43:25.963Z",
-        "lastUpdated": "2026-09-13T06:47:51.076Z"
+        "lastUpdated": "2026-09-19T04:14:52.086Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/global/websocket/dto/QuizCompletedMessage.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/quiz/dto/QuizDetailResponse.java"
     },
     "service": {
       "phase": "do",
@@ -132,9 +136,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:43:39.609Z",
-        "lastUpdated": "2026-09-13T09:59:47.576Z"
+        "lastUpdated": "2026-09-19T04:15:16.914Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/quiz/service/QuizAnswerService.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/quiz/service/QuizQueryService.java"
     },
     "controller": {
       "phase": "do",
@@ -145,9 +149,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:44:00.453Z",
-        "lastUpdated": "2026-09-13T06:47:05.973Z"
+        "lastUpdated": "2026-09-19T04:15:32.206Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/quiz/controller/QuizController.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/quiz/controller/QuizController.java"
     },
     "websocket": {
       "phase": "do",
@@ -158,9 +162,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:47:32.117Z",
-        "lastUpdated": "2026-09-13T11:36:12.885Z"
+        "lastUpdated": "2026-09-19T04:07:46.764Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/global/websocket/TeamSessionHandshakeInterceptor.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/global/websocket/WebSocketConfig.java"
     },
     "support": {
       "phase": "do",
@@ -184,9 +188,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:49:15.551Z",
-        "lastUpdated": "2026-09-13T09:14:09.393Z"
+        "lastUpdated": "2026-09-19T04:16:16.086Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/src/test/java/com/stw/escapelink/quiz/QuizAnswerServiceConcurrencyTest.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/frontend/src/app/quiz/page.tsx"
     },
     "tmp": {
       "phase": "do",
@@ -200,6 +204,58 @@
         "lastUpdated": "2026-09-13T11:35:32.579Z"
       },
       "lastFile": "/tmp/ws_cross_team_test.py"
+    },
+    "frontend": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-19T04:11:25.632Z",
+        "lastUpdated": "2026-09-19T04:18:35.352Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/frontend/src/components/GameTimer.tsx"
+    },
+    "join": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-19T04:13:48.923Z",
+        "lastUpdated": "2026-09-19T04:13:48.923Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/frontend/src/app/join/page.tsx"
+    },
+    "quizzes": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-19T04:14:02.474Z",
+        "lastUpdated": "2026-09-19T04:14:02.474Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/frontend/src/app/quizzes/page.tsx"
+    },
+    "pw-verify": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-09-19T04:27:25.684Z",
+        "lastUpdated": "2026-09-19T04:27:25.684Z"
+      },
+      "lastFile": "/tmp/pw-verify/verify.js"
     }
   },
   "pipeline": {
@@ -210,7 +266,7 @@
   "session": {
     "startedAt": "2026-09-13T06:28:02.200Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-09-13T11:36:12.885Z"
+    "lastActivity": "2026-09-19T04:27:25.684Z"
   },
   "history": [
     {
@@ -624,6 +680,168 @@
     {
       "timestamp": "2026-09-13T11:36:12.885Z",
       "feature": "websocket",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:06:41.116Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:07:03.449Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:07:12.087Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:07:20.671Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:07:35.788Z",
+      "feature": "websocket",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:07:46.764Z",
+      "feature": "websocket",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:11:25.632Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:11:36.746Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:12:49.449Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:12:56.260Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:13:03.808Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:13:30.958Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:13:48.923Z",
+      "feature": "join",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:14:02.474Z",
+      "feature": "quizzes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:14:14.203Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:14:21.524Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:14:52.086Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:15:08.824Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:15:16.914Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:15:26.802Z",
+      "feature": "controller",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:15:32.206Z",
+      "feature": "controller",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:15:45.860Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:16:16.086Z",
+      "feature": "quiz",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:16:22.753Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:18:27.577Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:18:35.352Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-19T04:27:25.684Z",
+      "feature": "pw-verify",
       "phase": "do",
       "action": "updated"
     }
