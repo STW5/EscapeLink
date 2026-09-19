@@ -27,6 +27,8 @@ escapelink:
   team-session:
     cookie-name: ESCAPELINK_TEAM_SESSION
     ttl-hours: 24
+  cors:
+    allowed-origins: ${ESCAPELINK_CORS_ALLOWED_ORIGINS:http://localhost:3000}
 
 springdoc:
   swagger-ui:

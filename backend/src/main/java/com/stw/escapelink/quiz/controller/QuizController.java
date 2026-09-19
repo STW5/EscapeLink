@@ -4,6 +4,7 @@ import com.stw.escapelink.global.response.ApiResponse;
 import com.stw.escapelink.global.security.CurrentTeam;
 import com.stw.escapelink.quiz.dto.AnswerRequest;
 import com.stw.escapelink.quiz.dto.AnswerResponse;
+import com.stw.escapelink.quiz.dto.QuizDetailResponse;
 import com.stw.escapelink.quiz.dto.QuizListResponse;
 import com.stw.escapelink.quiz.service.QuizAnswerService;
 import com.stw.escapelink.quiz.service.QuizQueryService;
@@ -29,6 +30,12 @@ public class QuizController {
     @GetMapping("/api/quizzes")
     public ApiResponse<QuizListResponse> list(@AuthenticationPrincipal CurrentTeam currentTeam) {
         return ApiResponse.ok(quizQueryService.listForTeam(currentTeam.teamId()));
+    }
+
+    @GetMapping("/api/quizzes/{quizId}")
+    public ApiResponse<QuizDetailResponse> detail(@AuthenticationPrincipal CurrentTeam currentTeam,
+                                                    @PathVariable Long quizId) {
+        return ApiResponse.ok(quizQueryService.getDetail(currentTeam.teamId(), quizId));
     }
 
     @PostMapping("/api/quizzes/{quizId}/answer")

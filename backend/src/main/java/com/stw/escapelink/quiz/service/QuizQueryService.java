@@ -5,6 +5,7 @@ import com.stw.escapelink.global.exception.ErrorCode;
 import com.stw.escapelink.quiz.domain.Quiz;
 import com.stw.escapelink.quiz.domain.QuizProgress;
 import com.stw.escapelink.quiz.domain.QuizProgressStatus;
+import com.stw.escapelink.quiz.dto.QuizDetailResponse;
 import com.stw.escapelink.quiz.dto.QuizListItemResponse;
 import com.stw.escapelink.quiz.dto.QuizListResponse;
 import com.stw.escapelink.quiz.repository.QuizProgressRepository;
@@ -14,6 +15,7 @@ import com.stw.escapelink.team.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -53,5 +55,40 @@ public class QuizQueryService {
                 .toList();
 
         return new QuizListResponse(team.getGameId(), team.getId(), items);
+    }
+
+    /**
+     * Viewing a quiz counts as "entering" it: the first team member to open this
+     * page starts the hint-delay clock (see Quiz#isHintAvailableAt).
+     */
+    @Transactional
+    public QuizDetailResponse getDetail(Long teamId, Long quizId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.TEAM_NOT_FOUND));
+        Quiz quiz = quizRepository.findById(quizId)
+                .filter(q -> q.getGameId().equals(team.getGameId()))
+                .orElseThrow(() -> new BusinessException(ErrorCode.QUIZ_NOT_FOUND));
+
+        quizProgressRepository.insertIfAbsent(teamId, quizId, team.getCurrentRunNo());
+        QuizProgress progress = quizProgressRepository
+                .findByTeamIdAndQuizIdAndRunNo(teamId, quizId, team.getCurrentRunNo())
+                .orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_ERROR));
+
+        Instant firstEnteredAt = progress.getFirstEnteredAt();
+        boolean hintAvailable = quiz.isHintAvailableAt(firstEnteredAt, Instant.now());
+        Instant hintAvailableAt = firstEnteredAt == null
+                ? null
+                : firstEnteredAt.plusSeconds(quiz.getHintDelaySeconds());
+
+        return new QuizDetailResponse(
+                quiz.getId(),
+                quiz.getTitle(),
+                quiz.getContent(),
+                quiz.getType(),
+                progress.getStatus(),
+                hintAvailable,
+                hintAvailableAt,
+                hintAvailable ? quiz.getHint() : null
+        );
     }
 }
