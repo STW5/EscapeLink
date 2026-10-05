@@ -177,8 +177,9 @@ images. Volumes: `/srv/escapelink/postgres`, `/srv/escapelink/uploads`. `ddl-aut
 6. Image upload. 7. Admin review. 8. Admin manual override. 9. Final stage. 10. Leaderboard.
 11. Offline/reconnect hardening. 12. Raspberry Pi Docker deployment.
 
-This document tracks steps 1–5 for the current implementation pass; 6–12 are designed above
-but not yet built.
+Steps 1–6 are implemented (backend + a Next.js static-export participant frontend in
+`frontend/`, covering QR join, TEXT answer submission, and IMAGE submission with
+client-side resize/compression). 7–12 are designed above but not yet built.
 
 ## 18. Test requirements carried into implementation
 
