@@ -8,6 +8,8 @@ spring:
 escapelink:
   team-session:
     cookie-secure: false
+  upload:
+    root-path: ${ESCAPELINK_UPLOAD_ROOT:/tmp/escapelink-uploads}
 
 logging:
   level:

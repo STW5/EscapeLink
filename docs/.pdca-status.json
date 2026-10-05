@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-09-19T04:27:25.684Z",
+  "lastUpdated": "2026-10-05T03:52:51.000Z",
   "activeFeatures": [
     "response",
     "exception",
@@ -45,9 +45,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:39:10.655Z",
-        "lastUpdated": "2026-09-13T06:39:25.370Z"
+        "lastUpdated": "2026-10-05T03:52:45.634Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/global/exception/GlobalExceptionHandler.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/global/exception/BusinessException.java"
     },
     "domain": {
       "phase": "do",
@@ -58,9 +58,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:39:56.312Z",
-        "lastUpdated": "2026-09-13T09:01:33.904Z"
+        "lastUpdated": "2026-09-27T04:50:43.740Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/quiz/domain/Quiz.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/submission/domain/ImageSubmission.java"
     },
     "repository": {
       "phase": "do",
@@ -71,9 +71,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:40:54.317Z",
-        "lastUpdated": "2026-09-13T06:46:04.341Z"
+        "lastUpdated": "2026-09-27T04:50:53.528Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/src/main/java/com/stw/escapelink/quiz/repository/QuizProgressRepository.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/submission/repository/ImageSubmissionRepository.java"
     },
     "config": {
       "phase": "do",
@@ -84,9 +84,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:42:16.001Z",
-        "lastUpdated": "2026-09-19T04:07:20.671Z"
+        "lastUpdated": "2026-09-27T04:28:33.294Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/global/config/SecurityConfig.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/global/config/UploadProperties.java"
     },
     "escapelink": {
       "phase": "do",
@@ -123,9 +123,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:43:25.963Z",
-        "lastUpdated": "2026-09-19T04:14:52.086Z"
+        "lastUpdated": "2026-09-27T05:09:17.152Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/quiz/dto/QuizDetailResponse.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/submission/dto/ImageSubmissionResponse.java"
     },
     "service": {
       "phase": "do",
@@ -136,9 +136,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:43:39.609Z",
-        "lastUpdated": "2026-09-19T04:15:16.914Z"
+        "lastUpdated": "2026-10-05T03:52:51.000Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/quiz/service/QuizQueryService.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/submission/service/ImageSubmissionService.java"
     },
     "controller": {
       "phase": "do",
@@ -149,9 +149,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:44:00.453Z",
-        "lastUpdated": "2026-09-19T04:15:32.206Z"
+        "lastUpdated": "2026-09-27T05:23:27.053Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/quiz/controller/QuizController.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/submission/controller/ImageSubmissionController.java"
     },
     "websocket": {
       "phase": "do",
@@ -266,7 +266,7 @@
   "session": {
     "startedAt": "2026-09-13T06:28:02.200Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-09-19T04:27:25.684Z"
+    "lastActivity": "2026-10-05T03:52:51.000Z"
   },
   "history": [
     {
@@ -842,6 +842,90 @@
     {
       "timestamp": "2026-09-19T04:27:25.684Z",
       "feature": "pw-verify",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T04:28:33.294Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T04:28:42.595Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T04:50:43.740Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T04:50:53.528Z",
+      "feature": "repository",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T05:04:21.836Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T05:04:32.372Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T05:04:41.368Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T05:09:05.383Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T05:09:17.152Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T05:23:27.053Z",
+      "feature": "controller",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T05:23:46.332Z",
+      "feature": "exception",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-09-27T05:23:54.369Z",
+      "feature": "exception",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-05T03:52:45.634Z",
+      "feature": "exception",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-05T03:52:51.000Z",
+      "feature": "service",
       "phase": "do",
       "action": "updated"
     }

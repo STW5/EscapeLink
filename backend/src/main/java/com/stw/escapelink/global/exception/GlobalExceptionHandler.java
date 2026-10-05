@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,6 +39,13 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
         return ResponseEntity.status(errorCode.getStatus())
                 .body(ApiResponse.fail(errorCode.name(), errorCode.getDefaultMessage(), fieldErrors));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException e) {
+        ErrorCode errorCode = ErrorCode.IMAGE_TOO_LARGE;
+        return ResponseEntity.status(errorCode.getStatus())
+                .body(ApiResponse.fail(errorCode.name(), errorCode.getDefaultMessage(), null));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
