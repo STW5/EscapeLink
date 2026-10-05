@@ -3,8 +3,9 @@
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { api, ApiError } from "@/lib/api";
-import type { AnswerResult, QuizDetail, TeamState } from "@/lib/types";
+import type { AnswerResult, QuizDetail, QuizProgressStatus, TeamState } from "@/lib/types";
 import StatusBadge from "@/components/StatusBadge";
+import ImageAnswerForm from "@/components/ImageAnswerForm";
 
 const DEFAULT_COOLDOWN_SECONDS = 10;
 
@@ -147,6 +148,13 @@ function QuizDetailView() {
         <p className="text-center text-emerald-400 font-medium py-4">
           이미 완료한 문제입니다.
         </p>
+      ) : quiz.type === "IMAGE" ? (
+        <ImageAnswerForm
+          quiz={quiz}
+          onSubmitted={(status: QuizProgressStatus) =>
+            setQuiz((prev) => (prev ? { ...prev, status } : prev))
+          }
+        />
       ) : (
         <form onSubmit={submitAnswer} className="space-y-3">
           <input

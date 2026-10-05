@@ -50,8 +50,22 @@ export type AnswerResult = {
   solvedAt: string | null;
 };
 
+export type ImageSubmissionResult = {
+  submissionId: number;
+  submissionVersion: number;
+  status: QuizProgressStatus;
+};
+
 export type QuizCompletedMessage = {
   type: "QUIZ_COMPLETED";
   quizId: number;
   stateVersion: number;
 };
+
+export type ImagePendingMessage = {
+  type: "IMAGE_PENDING";
+  quizId: number;
+  submissionId: number;
+};
+
+export type TeamEvent = QuizCompletedMessage | ImagePendingMessage;

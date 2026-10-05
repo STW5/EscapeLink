@@ -18,11 +18,14 @@ async function request<T>(
   path: string,
   init?: RequestInit
 ): Promise<T> {
+  const isFormData = init?.body instanceof FormData;
+
   const res = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
     credentials: "include",
     headers: {
-      "Content-Type": "application/json",
+      // FormData sets its own multipart boundary; a manual Content-Type breaks it.
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...init?.headers,
     },
   });
@@ -43,6 +46,8 @@ export const api = {
       method: "POST",
       body: body !== undefined ? JSON.stringify(body) : undefined,
     }),
+  postForm: <T>(path: string, formData: FormData) =>
+    request<T>(path, { method: "POST", body: formData }),
 };
 
 export { API_BASE_URL };
