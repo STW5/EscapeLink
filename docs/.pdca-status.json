@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-10-09T06:20:56.797Z",
+  "lastUpdated": "2026-10-09T07:31:54.470Z",
   "activeFeatures": [
     "response",
     "exception",
@@ -19,7 +19,9 @@
     "frontend",
     "join",
     "quizzes",
-    "pw-verify"
+    "pw-verify",
+    "login",
+    "review"
   ],
   "primaryFeature": "response",
   "features": {
@@ -214,9 +216,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-19T04:11:25.632Z",
-        "lastUpdated": "2026-10-05T04:18:42.498Z"
+        "lastUpdated": "2026-10-09T07:29:13.549Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/frontend/src/lib/ws.ts"
+      "lastFile": "/Users/stw/Dev/EscapeLink/frontend/src/components/SubmissionCard.tsx"
     },
     "join": {
       "phase": "do",
@@ -253,9 +255,35 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-19T04:27:25.684Z",
-        "lastUpdated": "2026-10-05T04:39:17.325Z"
+        "lastUpdated": "2026-10-09T07:31:54.470Z"
       },
-      "lastFile": "/tmp/pw-verify/verify-image.js"
+      "lastFile": "/tmp/pw-verify/verify-admin.js"
+    },
+    "login": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-10-09T07:28:54.512Z",
+        "lastUpdated": "2026-10-09T07:28:54.512Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/frontend/src/app/admin/login/page.tsx"
+    },
+    "review": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-10-09T07:29:25.783Z",
+        "lastUpdated": "2026-10-09T07:29:25.783Z"
+      },
+      "lastFile": "/Users/stw/Dev/EscapeLink/frontend/src/app/admin/review/page.tsx"
     }
   },
   "pipeline": {
@@ -266,7 +294,7 @@
   "session": {
     "startedAt": "2026-09-13T06:28:02.200Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-10-09T06:20:56.797Z"
+    "lastActivity": "2026-10-09T07:31:54.470Z"
   },
   "history": [
     {
@@ -1148,6 +1176,42 @@
     {
       "timestamp": "2026-10-09T06:20:56.797Z",
       "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-09T07:28:04.822Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-09T07:28:24.783Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-09T07:28:54.512Z",
+      "feature": "login",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-09T07:29:13.549Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-09T07:29:25.783Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-09T07:31:54.470Z",
+      "feature": "pw-verify",
       "phase": "do",
       "action": "updated"
     }
