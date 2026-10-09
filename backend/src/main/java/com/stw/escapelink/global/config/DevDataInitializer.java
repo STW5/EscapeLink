@@ -1,5 +1,8 @@
 package com.stw.escapelink.global.config;
 
+import com.stw.escapelink.admin.domain.Admin;
+import com.stw.escapelink.admin.domain.AdminRole;
+import com.stw.escapelink.admin.repository.AdminRepository;
 import com.stw.escapelink.game.domain.Game;
 import com.stw.escapelink.game.domain.GameStatus;
 import com.stw.escapelink.game.repository.GameRepository;
@@ -16,6 +19,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -55,6 +59,21 @@ public class DevDataInitializer {
 
             log.info("Dev demo data seeded: gameId={}, inviteToken={}, quizId={}, answer='{}'",
                     game.getId(), team.getInviteToken(), quiz.getId(), DEMO_ANSWER);
+        };
+    }
+
+    @Bean
+    public CommandLineRunner seedAdminAccount(AdminRepository adminRepository, PasswordEncoder passwordEncoder) {
+        return args -> {
+            if (adminRepository.count() > 0) {
+                return;
+            }
+
+            String username = "admin";
+            String password = "admin1234!";
+            adminRepository.save(new Admin(username, passwordEncoder.encode(password), AdminRole.ADMIN));
+
+            log.info("Dev admin account seeded: username={}, password={}", username, password);
         };
     }
 }

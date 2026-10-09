@@ -5,6 +5,12 @@ spring:
     password: ${DB_PASSWORD:escapelink}
     driver-class-name: org.postgresql.Driver
 
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+
 escapelink:
   team-session:
     cookie-secure: false

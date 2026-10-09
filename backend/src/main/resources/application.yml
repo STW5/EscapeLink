@@ -19,6 +19,15 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
 
+server:
+  servlet:
+    session:
+      cookie:
+        name: ESCAPELINK_ADMIN_SESSION
+        same-site: lax
+        secure: true
+        http-only: true
+
 escapelink:
   upload:
     root-path: ${ESCAPELINK_UPLOAD_ROOT:/srv/escapelink/uploads}
@@ -26,8 +35,6 @@ escapelink:
     allowed-content-types: image/jpeg,image/webp,image/png
   quiz:
     answer-cooldown-seconds: 10
-  admin:
-    cookie-name: ESCAPELINK_ADMIN
   team-session:
     cookie-name: ESCAPELINK_TEAM_SESSION
     ttl-hours: 24

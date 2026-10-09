@@ -1,5 +1,8 @@
 package com.stw.escapelink.global.config;
 
+import com.stw.escapelink.global.security.AdminLoginFailureHandler;
+import com.stw.escapelink.global.security.AdminLoginSuccessHandler;
+import com.stw.escapelink.global.security.AdminLogoutSuccessHandler;
 import com.stw.escapelink.global.security.RestAccessDeniedHandler;
 import com.stw.escapelink.global.security.RestAuthenticationEntryPoint;
 import com.stw.escapelink.global.security.TeamSessionAuthenticationFilter;
@@ -25,21 +28,35 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    /**
-     * Admin auth (Admin entity, login, ADMIN role) is built in a later phase.
-     * Until then /api/admin/** is fully closed rather than left half-wired.
-     */
     @Bean
     @Order(1)
     public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http,
+                                                         CorsProperties corsProperties,
                                                          RestAuthenticationEntryPoint entryPoint,
-                                                         RestAccessDeniedHandler accessDeniedHandler) throws Exception {
+                                                         RestAccessDeniedHandler accessDeniedHandler,
+                                                         AdminLoginSuccessHandler loginSuccessHandler,
+                                                         AdminLoginFailureHandler loginFailureHandler,
+                                                         AdminLogoutSuccessHandler logoutSuccessHandler) throws Exception {
+        // Session-cookie admin console: same CSRF reasoning as the participant API
+        // chain (JSON-only state-changing endpoints + SameSite=Lax cookie) rather
+        // than a CSRF token — kept consistent rather than mixing two models.
         http.securityMatcher("/api/admin/**")
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource(corsProperties)))
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(entryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
-                .authorizeHttpRequests(auth -> auth.anyRequest().denyAll());
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/api/admin/login").permitAll()
+                        .anyRequest().hasRole("ADMIN"))
+                .formLogin(form -> form
+                        .loginProcessingUrl("/api/admin/login")
+                        .successHandler(loginSuccessHandler)
+                        .failureHandler(loginFailureHandler)
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/api/admin/logout")
+                        .logoutSuccessHandler(logoutSuccessHandler));
         return http.build();
     }
 
