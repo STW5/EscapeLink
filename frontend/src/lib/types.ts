@@ -16,6 +16,7 @@ export type TeamState = {
   gameStartAt: string | null;
   gameEndAt: string | null;
   finalStageUnlocked: boolean;
+  finalStageClearedAt: string | null;
 };
 
 export type QuizType = "TEXT" | "IMAGE";
@@ -69,4 +70,16 @@ export type ImagePendingMessage = {
   submissionId: number;
 };
 
-export type TeamEvent = QuizCompletedMessage | ImagePendingMessage;
+export type TeamControlMessage = {
+  type:
+    | "QUIZ_FORCE_COMPLETED"
+    | "TEAM_RESET"
+    | "FORCE_FINAL_STAGE"
+    | "FINAL_STAGE_ENABLED"
+    | "FINAL_STAGE_CLEARED"
+    | "IMAGE_APPROVED"
+    | "IMAGE_REJECTED";
+  quizId: number | null;
+};
+
+export type TeamEvent = QuizCompletedMessage | ImagePendingMessage | TeamControlMessage;

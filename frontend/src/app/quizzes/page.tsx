@@ -61,6 +61,18 @@ export default function QuizzesPage() {
         <GameTimer endAt={teamState.gameEndAt} status={teamState.gameStatus} />
       </header>
 
+      {teamState.finalStageUnlocked && (
+        <button
+          onClick={() => router.push("/final-stage")}
+          className="w-full rounded-xl bg-indigo-600 px-4 py-4 text-left font-semibold"
+        >
+          🏁 최종 미션으로 이동
+          {teamState.finalStageClearedAt && (
+            <span className="block text-xs font-normal text-indigo-200 mt-1">클리어 완료</span>
+          )}
+        </button>
+      )}
+
       <ul className="space-y-3">
         {quizList.quizzes.map((quiz) => (
           <li key={quiz.id}>
