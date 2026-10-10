@@ -15,6 +15,7 @@ import com.stw.escapelink.submission.domain.ImageSubmissionStatus;
 import com.stw.escapelink.submission.repository.ImageSubmissionRepository;
 import com.stw.escapelink.team.domain.Team;
 import com.stw.escapelink.team.repository.TeamRepository;
+import com.stw.escapelink.team.service.FinalStageService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,18 +31,21 @@ public class ImageReviewService {
     private final TeamRepository teamRepository;
     private final QuizRepository quizRepository;
     private final AdminActionLogRepository adminActionLogRepository;
+    private final FinalStageService finalStageService;
     private final ApplicationEventPublisher eventPublisher;
 
     public ImageReviewService(ImageSubmissionRepository imageSubmissionRepository,
                                QuizProgressRepository quizProgressRepository,
                                TeamRepository teamRepository, QuizRepository quizRepository,
                                AdminActionLogRepository adminActionLogRepository,
+                               FinalStageService finalStageService,
                                ApplicationEventPublisher eventPublisher) {
         this.imageSubmissionRepository = imageSubmissionRepository;
         this.quizProgressRepository = quizProgressRepository;
         this.teamRepository = teamRepository;
         this.quizRepository = quizRepository;
         this.adminActionLogRepository = adminActionLogRepository;
+        this.finalStageService = finalStageService;
         this.eventPublisher = eventPublisher;
     }
 
@@ -82,6 +86,7 @@ public class ImageReviewService {
 
         eventPublisher.publishEvent(
                 new ImageReviewedEvent(submission.getTeamId(), submission.getQuizId(), true, null));
+        finalStageService.checkAndUnlockIfAllCompleted(submission.getTeamId());
     }
 
     @Transactional

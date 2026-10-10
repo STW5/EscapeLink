@@ -1,4 +1,4 @@
-package com.stw.escapelink.admin.service;
+package com.stw.escapelink.team.service;
 
 /** Raised only after the controlling transaction commits. quizId is null when not applicable. */
 public record TeamControlEvent(Long teamId, String type, Long quizId) {
@@ -13,5 +13,13 @@ public record TeamControlEvent(Long teamId, String type, Long quizId) {
 
     public static TeamControlEvent forceFinalStage(Long teamId) {
         return new TeamControlEvent(teamId, "FORCE_FINAL_STAGE", null);
+    }
+
+    public static TeamControlEvent finalStageEnabled(Long teamId) {
+        return new TeamControlEvent(teamId, "FINAL_STAGE_ENABLED", null);
+    }
+
+    public static TeamControlEvent finalStageCleared(Long teamId) {
+        return new TeamControlEvent(teamId, "FINAL_STAGE_CLEARED", null);
     }
 }

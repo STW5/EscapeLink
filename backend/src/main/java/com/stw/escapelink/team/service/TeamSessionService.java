@@ -82,7 +82,8 @@ public class TeamSessionService {
                 game.getStatus(),
                 game.getStartAt(),
                 game.getEndAt(),
-                team.isFinalStageUnlocked()
+                team.isFinalStageUnlocked(),
+                team.getFinalStageClearedAt()
         );
     }
 }

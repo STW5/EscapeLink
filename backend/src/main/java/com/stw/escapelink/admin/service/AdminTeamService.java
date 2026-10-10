@@ -16,6 +16,8 @@ import com.stw.escapelink.quiz.repository.QuizRepository;
 import com.stw.escapelink.quiz.service.QuizQueryService;
 import com.stw.escapelink.team.domain.Team;
 import com.stw.escapelink.team.repository.TeamRepository;
+import com.stw.escapelink.team.service.FinalStageService;
+import com.stw.escapelink.team.service.TeamControlEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,12 +36,14 @@ public class AdminTeamService {
     private final QuizQueryService quizQueryService;
     private final AdminActionLogRepository adminActionLogRepository;
     private final SecureTokenGenerator secureTokenGenerator;
+    private final FinalStageService finalStageService;
     private final ApplicationEventPublisher eventPublisher;
 
     public AdminTeamService(TeamRepository teamRepository, GameRepository gameRepository,
                              QuizRepository quizRepository, QuizProgressRepository quizProgressRepository,
                              QuizQueryService quizQueryService, AdminActionLogRepository adminActionLogRepository,
-                             SecureTokenGenerator secureTokenGenerator, ApplicationEventPublisher eventPublisher) {
+                             SecureTokenGenerator secureTokenGenerator, FinalStageService finalStageService,
+                             ApplicationEventPublisher eventPublisher) {
         this.teamRepository = teamRepository;
         this.gameRepository = gameRepository;
         this.quizRepository = quizRepository;
@@ -47,6 +51,7 @@ public class AdminTeamService {
         this.quizQueryService = quizQueryService;
         this.adminActionLogRepository = adminActionLogRepository;
         this.secureTokenGenerator = secureTokenGenerator;
+        this.finalStageService = finalStageService;
         this.eventPublisher = eventPublisher;
     }
 
@@ -83,6 +88,7 @@ public class AdminTeamService {
                 teamId, quiz.getId(), null));
 
         eventPublisher.publishEvent(TeamControlEvent.quizForceCompleted(teamId, quiz.getId()));
+        finalStageService.checkAndUnlockIfAllCompleted(teamId);
     }
 
     @Transactional

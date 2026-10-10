@@ -12,6 +12,7 @@ public record TeamStateResponse(
         GameStatus gameStatus,
         Instant gameStartAt,
         Instant gameEndAt,
-        boolean finalStageUnlocked
+        boolean finalStageUnlocked,
+        Instant finalStageClearedAt
 ) {
 }

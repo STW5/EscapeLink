@@ -14,6 +14,7 @@ import com.stw.escapelink.quiz.repository.QuizRepository;
 import com.stw.escapelink.quiz.repository.QuizSecretRepository;
 import com.stw.escapelink.team.domain.Team;
 import com.stw.escapelink.team.repository.TeamRepository;
+import com.stw.escapelink.team.service.FinalStageService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,18 +31,20 @@ public class QuizAnswerService {
     private final QuizSecretRepository quizSecretRepository;
     private final QuizProgressRepository quizProgressRepository;
     private final QuizProperties quizProperties;
+    private final FinalStageService finalStageService;
     private final ApplicationEventPublisher eventPublisher;
 
     public QuizAnswerService(TeamRepository teamRepository, GameRepository gameRepository,
                               QuizRepository quizRepository, QuizSecretRepository quizSecretRepository,
                               QuizProgressRepository quizProgressRepository, QuizProperties quizProperties,
-                              ApplicationEventPublisher eventPublisher) {
+                              FinalStageService finalStageService, ApplicationEventPublisher eventPublisher) {
         this.teamRepository = teamRepository;
         this.gameRepository = gameRepository;
         this.quizRepository = quizRepository;
         this.quizSecretRepository = quizSecretRepository;
         this.quizProgressRepository = quizProgressRepository;
         this.quizProperties = quizProperties;
+        this.finalStageService = finalStageService;
         this.eventPublisher = eventPublisher;
     }
 
@@ -105,6 +108,7 @@ public class QuizAnswerService {
 
         if (correct) {
             eventPublisher.publishEvent(new QuizCompletedEvent(teamId, quizId, progress.getVersion()));
+            finalStageService.checkAndUnlockIfAllCompleted(teamId);
             return new AnswerResponse(true, progress.getStatus(), progress.getSolvedAt());
         }
 

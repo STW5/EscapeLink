@@ -43,6 +43,13 @@ public class Team {
     @Column(name = "final_stage_forced", nullable = false)
     private boolean finalStageForced;
 
+    @Column(name = "final_stage_entered_at")
+    private Instant finalStageEnteredAt;
+
+    /** Set once, on the first successful clear. Never overwritten after that. */
+    @Column(name = "final_stage_cleared_at")
+    private Instant finalStageClearedAt;
+
     protected Team() {
     }
 
@@ -61,9 +68,14 @@ public class Team {
     /**
      * Advances to a fresh run instead of deleting history, so stale in-flight
      * requests carrying the old runNo are rejected rather than corrupting state.
+     * Final-stage state is run-scoped, so it resets along with the quizzes.
      */
     public void resetToNewRun() {
         this.currentRunNo += 1;
+        this.finalStageUnlocked = false;
+        this.finalStageForced = false;
+        this.finalStageEnteredAt = null;
+        this.finalStageClearedAt = null;
     }
 
     public boolean isCurrentRun(int runNo) {
@@ -77,5 +89,23 @@ public class Team {
     public void forceFinalStage() {
         this.finalStageUnlocked = true;
         this.finalStageForced = true;
+        if (this.finalStageEnteredAt == null) {
+            this.finalStageEnteredAt = Instant.now();
+        }
+    }
+
+    /** Earned path: all quizzes completed normally, as opposed to an admin override. */
+    public void unlockFinalStage() {
+        this.finalStageUnlocked = true;
+        if (this.finalStageEnteredAt == null) {
+            this.finalStageEnteredAt = Instant.now();
+        }
+    }
+
+    /** Idempotent: clearedAt is only ever set once, on the first successful clear. */
+    public void clearFinalStage() {
+        if (this.finalStageClearedAt == null) {
+            this.finalStageClearedAt = Instant.now();
+        }
     }
 }

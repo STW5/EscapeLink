@@ -1,4 +1,4 @@
-package com.stw.escapelink.admin.service;
+package com.stw.escapelink.team.service;
 
 import com.stw.escapelink.global.websocket.dto.TeamControlMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

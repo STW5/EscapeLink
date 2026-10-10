@@ -17,6 +17,7 @@ public enum ErrorCode {
     INVALID_RUN(HttpStatus.CONFLICT, "이전 회차의 요청입니다."),
     IMAGE_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE, "이미지 용량이 너무 큽니다."),
     INVALID_IMAGE(HttpStatus.BAD_REQUEST, "유효하지 않은 이미지 파일입니다."),
+    FINAL_STAGE_NOT_UNLOCKED(HttpStatus.CONFLICT, "아직 최종 스테이지에 진입하지 않았습니다."),
     SUBMISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "제출물을 찾을 수 없습니다."),
     SUBMISSION_ALREADY_REVIEWED(HttpStatus.CONFLICT, "이미 검수 처리된 제출물입니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
