@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-10-10T12:40:06.297Z",
+  "lastUpdated": "2026-10-10T12:44:22.699Z",
   "activeFeatures": [
     "response",
     "exception",
@@ -77,9 +77,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:40:54.317Z",
-        "lastUpdated": "2026-10-05T05:40:33.589Z"
+        "lastUpdated": "2026-10-10T12:43:47.856Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/submission/repository/ImageSubmissionRepository.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/team/repository/TeamRepository.java"
     },
     "config": {
       "phase": "do",
@@ -129,9 +129,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:43:25.963Z",
-        "lastUpdated": "2026-10-10T12:32:57.227Z"
+        "lastUpdated": "2026-10-10T12:44:03.234Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/team/dto/ClearFinalStageResponse.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/leaderboard/dto/LeaderboardResponse.java"
     },
     "service": {
       "phase": "do",
@@ -142,9 +142,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:43:39.609Z",
-        "lastUpdated": "2026-10-10T12:32:52.218Z"
+        "lastUpdated": "2026-10-10T12:44:15.951Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/team/service/TeamSessionService.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/leaderboard/service/LeaderboardService.java"
     },
     "controller": {
       "phase": "do",
@@ -155,9 +155,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:44:00.453Z",
-        "lastUpdated": "2026-10-10T12:33:03.900Z"
+        "lastUpdated": "2026-10-10T12:44:22.699Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/team/controller/FinalStageController.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/leaderboard/controller/LeaderboardController.java"
     },
     "websocket": {
       "phase": "do",
@@ -350,7 +350,7 @@
   "session": {
     "startedAt": "2026-09-13T06:28:02.200Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-10-10T12:40:06.297Z"
+    "lastActivity": "2026-10-10T12:44:22.699Z"
   },
   "history": [
     {
@@ -1688,6 +1688,36 @@
     {
       "timestamp": "2026-10-10T12:40:06.297Z",
       "feature": "pw-verify",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:43:47.856Z",
+      "feature": "repository",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:43:57.564Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:44:03.234Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:44:15.951Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:44:22.699Z",
+      "feature": "controller",
       "phase": "do",
       "action": "updated"
     }
