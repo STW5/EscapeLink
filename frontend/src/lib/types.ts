@@ -83,3 +83,17 @@ export type TeamControlMessage = {
 };
 
 export type TeamEvent = QuizCompletedMessage | ImagePendingMessage | TeamControlMessage;
+
+export type LeaderboardEntry = {
+  teamName: string;
+  completedQuizCount: number;
+  totalQuizCount: number;
+  finalStageReached: boolean;
+  clearTime: string | null;
+};
+
+export type LeaderboardResponse = {
+  gameId: number | null;
+  gameTitle: string | null;
+  teams: LeaderboardEntry[];
+};

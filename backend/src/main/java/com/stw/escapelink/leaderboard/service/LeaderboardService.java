@@ -64,10 +64,13 @@ public class LeaderboardService {
         if (gameId != null) {
             return gameRepository.findById(gameId).orElse(null);
         }
+        // Multiple games can be RUNNING at once if an admin forgets to finish an
+        // old one before starting the next — prefer the most recently *started*
+        // one, not just whichever happens to come first in repository order.
         List<Game> games = gameRepository.findAll();
         return games.stream()
                 .filter(Game::isRunning)
-                .findFirst()
+                .max(Comparator.comparing(Game::getUpdatedAt))
                 .orElseGet(() -> games.stream().max(Comparator.comparing(Game::getCreatedAt)).orElse(null));
     }
 
