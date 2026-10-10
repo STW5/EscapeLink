@@ -4,6 +4,7 @@ import com.stw.escapelink.quiz.dto.QuizListResponse;
 
 public record TeamSummaryResponse(
         Long teamId,
+        Long gameId,
         String teamName,
         String inviteToken,
         int currentRunNo,

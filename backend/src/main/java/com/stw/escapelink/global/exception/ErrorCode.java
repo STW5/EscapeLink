@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     TEAM_NOT_FOUND(HttpStatus.NOT_FOUND, "팀을 찾을 수 없습니다."),
+    GAME_NOT_FOUND(HttpStatus.NOT_FOUND, "게임을 찾을 수 없습니다."),
     INVALID_INVITE_TOKEN(HttpStatus.NOT_FOUND, "유효하지 않은 초대 코드입니다."),
     SESSION_EXPIRED(HttpStatus.UNAUTHORIZED, "세션이 만료되었습니다. 다시 접속해주세요."),
     GAME_NOT_RUNNING(HttpStatus.CONFLICT, "현재 진행 중인 게임이 아닙니다."),

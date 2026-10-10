@@ -4,8 +4,11 @@ import com.stw.escapelink.admin.domain.AdminAction;
 import com.stw.escapelink.admin.domain.AdminActionLog;
 import com.stw.escapelink.admin.dto.TeamSummaryResponse;
 import com.stw.escapelink.admin.repository.AdminActionLogRepository;
+import com.stw.escapelink.game.domain.Game;
+import com.stw.escapelink.game.repository.GameRepository;
 import com.stw.escapelink.global.exception.BusinessException;
 import com.stw.escapelink.global.exception.ErrorCode;
+import com.stw.escapelink.global.security.SecureTokenGenerator;
 import com.stw.escapelink.quiz.domain.Quiz;
 import com.stw.escapelink.quiz.domain.QuizProgress;
 import com.stw.escapelink.quiz.repository.QuizProgressRepository;
@@ -22,23 +25,39 @@ import java.util.List;
 @Service
 public class AdminTeamService {
 
+    private static final int INVITE_TOKEN_BYTE_LENGTH = 9;
+
     private final TeamRepository teamRepository;
+    private final GameRepository gameRepository;
     private final QuizRepository quizRepository;
     private final QuizProgressRepository quizProgressRepository;
     private final QuizQueryService quizQueryService;
     private final AdminActionLogRepository adminActionLogRepository;
+    private final SecureTokenGenerator secureTokenGenerator;
     private final ApplicationEventPublisher eventPublisher;
 
-    public AdminTeamService(TeamRepository teamRepository, QuizRepository quizRepository,
-                             QuizProgressRepository quizProgressRepository, QuizQueryService quizQueryService,
-                             AdminActionLogRepository adminActionLogRepository,
-                             ApplicationEventPublisher eventPublisher) {
+    public AdminTeamService(TeamRepository teamRepository, GameRepository gameRepository,
+                             QuizRepository quizRepository, QuizProgressRepository quizProgressRepository,
+                             QuizQueryService quizQueryService, AdminActionLogRepository adminActionLogRepository,
+                             SecureTokenGenerator secureTokenGenerator, ApplicationEventPublisher eventPublisher) {
         this.teamRepository = teamRepository;
+        this.gameRepository = gameRepository;
         this.quizRepository = quizRepository;
         this.quizProgressRepository = quizProgressRepository;
         this.quizQueryService = quizQueryService;
         this.adminActionLogRepository = adminActionLogRepository;
+        this.secureTokenGenerator = secureTokenGenerator;
         this.eventPublisher = eventPublisher;
+    }
+
+    @Transactional
+    public TeamSummaryResponse createTeam(Long gameId, String name) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.GAME_NOT_FOUND));
+
+        String inviteToken = secureTokenGenerator.generate(INVITE_TOKEN_BYTE_LENGTH);
+        Team team = teamRepository.save(new Team(game.getId(), name, inviteToken));
+        return toSummary(team);
     }
 
     @Transactional(readOnly = true)
@@ -97,7 +116,7 @@ public class AdminTeamService {
 
     private TeamSummaryResponse toSummary(Team team) {
         return new TeamSummaryResponse(
-                team.getId(), team.getName(), team.getInviteToken(), team.getCurrentRunNo(),
+                team.getId(), team.getGameId(), team.getName(), team.getInviteToken(), team.getCurrentRunNo(),
                 team.isFinalStageUnlocked(), team.isFinalStageForced(),
                 quizQueryService.listForTeam(team.getId()));
     }

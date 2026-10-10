@@ -1,12 +1,15 @@
 package com.stw.escapelink.admin.controller;
 
+import com.stw.escapelink.admin.dto.CreateTeamRequest;
 import com.stw.escapelink.admin.dto.TeamSummaryResponse;
 import com.stw.escapelink.admin.service.AdminTeamService;
 import com.stw.escapelink.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,6 +21,12 @@ public class AdminTeamController {
 
     public AdminTeamController(AdminTeamService adminTeamService) {
         this.adminTeamService = adminTeamService;
+    }
+
+    @PostMapping("/api/admin/games/{gameId}/teams")
+    public ApiResponse<TeamSummaryResponse> createTeam(@PathVariable Long gameId,
+                                                         @Valid @RequestBody CreateTeamRequest request) {
+        return ApiResponse.ok(adminTeamService.createTeam(gameId, request.name()));
     }
 
     @GetMapping("/api/admin/teams")

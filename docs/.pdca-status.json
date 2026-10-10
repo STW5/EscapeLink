@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-10-10T11:25:38.347Z",
+  "lastUpdated": "2026-10-10T12:12:32.061Z",
   "activeFeatures": [
     "response",
     "exception",
@@ -48,7 +48,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:39:10.655Z",
-        "lastUpdated": "2026-10-05T05:41:00.490Z"
+        "lastUpdated": "2026-10-10T12:10:34.202Z"
       },
       "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/global/exception/ErrorCode.java"
     },
@@ -61,9 +61,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:39:56.312Z",
-        "lastUpdated": "2026-10-10T05:45:25.600Z"
+        "lastUpdated": "2026-10-10T12:10:06.523Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/domain/AdminAction.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/game/domain/Game.java"
     },
     "repository": {
       "phase": "do",
@@ -126,9 +126,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:43:25.963Z",
-        "lastUpdated": "2026-10-10T05:46:04.217Z"
+        "lastUpdated": "2026-10-10T12:12:08.286Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/dto/TeamSummaryResponse.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/dto/QuizAdminResponse.java"
     },
     "service": {
       "phase": "do",
@@ -139,9 +139,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:43:39.609Z",
-        "lastUpdated": "2026-10-10T05:46:20.007Z"
+        "lastUpdated": "2026-10-10T12:12:20.103Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/service/AdminTeamService.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/service/AdminQuizService.java"
     },
     "controller": {
       "phase": "do",
@@ -152,9 +152,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:44:00.453Z",
-        "lastUpdated": "2026-10-10T05:46:27.935Z"
+        "lastUpdated": "2026-10-10T12:12:32.061Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/controller/AdminTeamController.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/controller/AdminQuizController.java"
     },
     "websocket": {
       "phase": "do",
@@ -308,7 +308,7 @@
   "session": {
     "startedAt": "2026-09-13T06:28:02.200Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-10-10T11:25:38.347Z"
+    "lastActivity": "2026-10-10T12:12:32.061Z"
   },
   "history": [
     {
@@ -1340,6 +1340,102 @@
     {
       "timestamp": "2026-10-10T11:25:38.347Z",
       "feature": "pw-verify",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:10:06.523Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:10:11.121Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:10:15.373Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:10:24.097Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:10:34.202Z",
+      "feature": "exception",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:10:39.107Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:10:47.327Z",
+      "feature": "controller",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:11:11.195Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:11:16.446Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:11:30.135Z",
+      "feature": "controller",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:11:40.450Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:11:54.025Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:12:03.638Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:12:08.286Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:12:20.104Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T12:12:32.061Z",
+      "feature": "controller",
       "phase": "do",
       "action": "updated"
     }

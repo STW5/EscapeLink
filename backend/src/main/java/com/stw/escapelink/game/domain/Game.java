@@ -64,6 +64,14 @@ public class Game {
         return status == GameStatus.RUNNING;
     }
 
+    public void start() {
+        this.status = GameStatus.RUNNING;
+    }
+
+    public void finish() {
+        this.status = GameStatus.FINISHED;
+    }
+
     public Long getId() {
         return id;
     }
