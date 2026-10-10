@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-10-09T07:31:54.470Z",
+  "lastUpdated": "2026-10-10T05:46:27.935Z",
   "activeFeatures": [
     "response",
     "exception",
@@ -60,9 +60,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:39:56.312Z",
-        "lastUpdated": "2026-10-05T05:36:37.018Z"
+        "lastUpdated": "2026-10-10T05:45:25.600Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/domain/AdminActionLog.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/domain/AdminAction.java"
     },
     "repository": {
       "phase": "do",
@@ -125,9 +125,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:43:25.963Z",
-        "lastUpdated": "2026-10-05T05:40:11.504Z"
+        "lastUpdated": "2026-10-10T05:46:04.217Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/global/websocket/dto/ImageReviewedMessage.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/dto/TeamSummaryResponse.java"
     },
     "service": {
       "phase": "do",
@@ -138,9 +138,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:43:39.609Z",
-        "lastUpdated": "2026-10-09T06:20:56.797Z"
+        "lastUpdated": "2026-10-10T05:46:20.007Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/service/ImageReviewService.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/service/AdminTeamService.java"
     },
     "controller": {
       "phase": "do",
@@ -151,9 +151,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-09-13T06:44:00.453Z",
-        "lastUpdated": "2026-10-05T05:41:33.775Z"
+        "lastUpdated": "2026-10-10T05:46:27.935Z"
       },
-      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/controller/ImageReviewController.java"
+      "lastFile": "/Users/stw/Dev/EscapeLink/backend/src/main/java/com/stw/escapelink/admin/controller/AdminTeamController.java"
     },
     "websocket": {
       "phase": "do",
@@ -294,7 +294,7 @@
   "session": {
     "startedAt": "2026-09-13T06:28:02.200Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-10-09T07:31:54.470Z"
+    "lastActivity": "2026-10-10T05:46:27.935Z"
   },
   "history": [
     {
@@ -1212,6 +1212,72 @@
     {
       "timestamp": "2026-10-09T07:31:54.470Z",
       "feature": "pw-verify",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T05:45:11.197Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T05:45:16.774Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T05:45:25.600Z",
+      "feature": "domain",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T05:45:32.672Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T05:45:43.660Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T05:45:49.182Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T05:45:54.140Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T05:45:59.757Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T05:46:04.217Z",
+      "feature": "dto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T05:46:20.007Z",
+      "feature": "service",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-10-10T05:46:27.935Z",
+      "feature": "controller",
       "phase": "do",
       "action": "updated"
     }

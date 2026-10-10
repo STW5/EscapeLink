@@ -36,6 +36,13 @@ public class Team {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    @Column(name = "final_stage_unlocked", nullable = false)
+    private boolean finalStageUnlocked;
+
+    /** True only when an admin opened the final stage before all quizzes were solved. */
+    @Column(name = "final_stage_forced", nullable = false)
+    private boolean finalStageForced;
+
     protected Team() {
     }
 
@@ -61,5 +68,14 @@ public class Team {
 
     public boolean isCurrentRun(int runNo) {
         return this.currentRunNo == runNo;
+    }
+
+    /**
+     * Admin override: opens the final stage regardless of quiz completion.
+     * Persisted (not just a WebSocket event) so it survives reconnects.
+     */
+    public void forceFinalStage() {
+        this.finalStageUnlocked = true;
+        this.finalStageForced = true;
     }
 }
