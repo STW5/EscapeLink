@@ -177,12 +177,15 @@ images. Volumes: `/srv/escapelink/postgres`, `/srv/escapelink/uploads`. `ddl-aut
 6. Image upload. 7. Admin review. 8. Admin manual override. 9. Final stage. 10. Leaderboard.
 11. Offline/reconnect hardening. 12. Raspberry Pi Docker deployment.
 
-Steps 1–8 are implemented (backend + a Next.js static-export frontend in `frontend/`,
+Steps 1–9 are implemented (backend + a Next.js static-export frontend in `frontend/`,
 covering QR join, TEXT answer submission, IMAGE submission with client-side
-resize/compression, and an `/admin` console with session-based admin login,
-image approve/reject review, and team control: force-complete a quiz, reset a
-team to a fresh run, and force-open the final stage). 9–12 are designed above
-but not yet built.
+resize/compression, an `/admin` console with session-based admin login,
+image approve/reject review, team control (force-complete a quiz, reset a
+team to a fresh run, force-open the final stage), and the final stage itself:
+auto-unlocks once every quiz is COMPLETED — via a normal answer, an approved
+image, or an admin force-complete — distinct from an admin override; clear is
+idempotent (first clear time wins); a team reset clears all final-stage state
+along with the quizzes). 10–12 are designed above but not yet built.
 
 Content management (not in the original numbered phases, but required to use
 any of the above without hand-editing the database) is also implemented:
