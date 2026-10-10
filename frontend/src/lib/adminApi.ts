@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "./api";
 import type { ApiResponse } from "./types";
-import type { PendingSubmission } from "./adminTypes";
+import type { PendingSubmission, TeamSummary } from "./adminTypes";
 
 export class AdminApiError extends Error {
   code: string;
@@ -50,4 +50,17 @@ export const adminApi = {
 
   imageUrl: (submissionId: number) =>
     `${API_BASE_URL}/api/admin/submissions/${submissionId}/image`,
+
+  listTeams: () => request<TeamSummary[]>("/api/admin/teams"),
+
+  forceCompleteQuiz: (teamId: number, quizId: number) =>
+    request<void>(`/api/admin/teams/${teamId}/quizzes/${quizId}/force-complete`, {
+      method: "POST",
+    }),
+
+  resetTeam: (teamId: number) =>
+    request<void>(`/api/admin/teams/${teamId}/reset`, { method: "POST" }),
+
+  forceFinalStage: (teamId: number) =>
+    request<void>(`/api/admin/teams/${teamId}/force-final-stage`, { method: "POST" }),
 };

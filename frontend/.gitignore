@@ -37,6 +37,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# bkit plugin session tracking (not project docs)
+/docs/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -64,9 +64,14 @@ export default function AdminReviewPage() {
           <h1 className="text-xl font-bold">이미지 검수</h1>
           <p className="text-sm text-neutral-400">{username} 로그인 중</p>
         </div>
-        <button onClick={handleLogout} className="text-sm text-neutral-400">
-          로그아웃
-        </button>
+        <div className="flex items-center gap-4">
+          <a href="/admin/teams" className="text-sm text-neutral-400">
+            팀 관리
+          </a>
+          <button onClick={handleLogout} className="text-sm text-neutral-400">
+            로그아웃
+          </button>
+        </div>
       </header>
 
       {submissions.length === 0 ? (

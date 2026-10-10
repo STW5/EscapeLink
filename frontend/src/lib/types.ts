@@ -15,6 +15,7 @@ export type TeamState = {
   gameStatus: GameStatus;
   gameStartAt: string | null;
   gameEndAt: string | null;
+  finalStageUnlocked: boolean;
 };
 
 export type QuizType = "TEXT" | "IMAGE";
