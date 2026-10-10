@@ -185,7 +185,9 @@ team to a fresh run, force-open the final stage), and the final stage itself:
 auto-unlocks once every quiz is COMPLETED — via a normal answer, an approved
 image, or an admin force-complete — distinct from an admin override; clear is
 idempotent (first clear time wins); a team reset clears all final-stage state
-along with the quizzes). 10–12 are designed above but not yet built.
+along with the quizzes; and a public `/leaderboard` ranked by clear time then
+completed-quiz count, resolvable by explicit `gameId` or defaulting to the
+most recently started RUNNING game). 11–12 are designed above but not yet built.
 
 Content management (not in the original numbered phases, but required to use
 any of the above without hand-editing the database) is also implemented:
