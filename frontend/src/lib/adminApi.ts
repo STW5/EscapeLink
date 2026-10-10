@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "./api";
 import type { ApiResponse } from "./types";
-import type { PendingSubmission, TeamSummary } from "./adminTypes";
+import type { Game, PendingSubmission, QuizAdmin, TeamSummary } from "./adminTypes";
 
 export class AdminApiError extends Error {
   code: string;
@@ -24,6 +24,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return body.data as T;
 }
 
+function postJson<T>(path: string, payload: unknown): Promise<T> {
+  return request<T>(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+
 export const adminApi = {
   login: (username: string, password: string) =>
     request<{ username: string }>("/api/admin/login", {
@@ -42,11 +50,7 @@ export const adminApi = {
     request<void>(`/api/admin/submissions/${submissionId}/approve`, { method: "POST" }),
 
   reject: (submissionId: number, reason: string) =>
-    request<void>(`/api/admin/submissions/${submissionId}/reject`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reason }),
-    }),
+    postJson<void>(`/api/admin/submissions/${submissionId}/reject`, { reason }),
 
   imageUrl: (submissionId: number) =>
     `${API_BASE_URL}/api/admin/submissions/${submissionId}/image`,
@@ -63,4 +67,33 @@ export const adminApi = {
 
   forceFinalStage: (teamId: number) =>
     request<void>(`/api/admin/teams/${teamId}/force-final-stage`, { method: "POST" }),
+
+  listGames: () => request<Game[]>("/api/admin/games"),
+
+  createGame: (title: string) => postJson<Game>("/api/admin/games", { title }),
+
+  startGame: (gameId: number) =>
+    request<Game>(`/api/admin/games/${gameId}/start`, { method: "POST" }),
+
+  finishGame: (gameId: number) =>
+    request<Game>(`/api/admin/games/${gameId}/finish`, { method: "POST" }),
+
+  createTeam: (gameId: number, name: string) =>
+    postJson<TeamSummary>(`/api/admin/games/${gameId}/teams`, { name }),
+
+  listQuizzes: (gameId: number) =>
+    request<QuizAdmin[]>(`/api/admin/games/${gameId}/quizzes`),
+
+  createQuiz: (
+    gameId: number,
+    payload: {
+      title: string;
+      content: string;
+      type: "TEXT" | "IMAGE";
+      orderNo: number;
+      hint: string;
+      hintDelaySeconds: number;
+      answer?: string;
+    }
+  ) => postJson<QuizAdmin>(`/api/admin/games/${gameId}/quizzes`, payload),
 };

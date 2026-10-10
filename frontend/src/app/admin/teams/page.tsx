@@ -50,9 +50,14 @@ export default function AdminTeamsPage() {
     <main className="flex-1 px-5 py-8 max-w-2xl mx-auto w-full space-y-6">
       <header className="flex items-center justify-between">
         <h1 className="text-xl font-bold">팀 관리</h1>
-        <a href="/admin/review" className="text-sm text-neutral-400">
-          이미지 검수로
-        </a>
+        <div className="flex items-center gap-4">
+          <a href="/admin/games" className="text-sm text-neutral-400">
+            게임 관리
+          </a>
+          <a href="/admin/review" className="text-sm text-neutral-400">
+            이미지 검수로
+          </a>
+        </div>
       </header>
 
       <div className="space-y-4">

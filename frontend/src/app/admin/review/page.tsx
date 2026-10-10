@@ -65,6 +65,9 @@ export default function AdminReviewPage() {
           <p className="text-sm text-neutral-400">{username} 로그인 중</p>
         </div>
         <div className="flex items-center gap-4">
+          <a href="/admin/games" className="text-sm text-neutral-400">
+            게임 관리
+          </a>
           <a href="/admin/teams" className="text-sm text-neutral-400">
             팀 관리
           </a>
