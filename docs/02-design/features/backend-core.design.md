@@ -182,8 +182,14 @@ covering QR join, TEXT answer submission, IMAGE submission with client-side
 resize/compression, and an `/admin` console with session-based admin login,
 image approve/reject review, and team control: force-complete a quiz, reset a
 team to a fresh run, and force-open the final stage). 9–12 are designed above
-but not yet built. Note: there is still no API to create games/teams/quizzes —
-all content so far was seeded via the dev-only seeder or direct SQL.
+but not yet built.
+
+Content management (not in the original numbered phases, but required to use
+any of the above without hand-editing the database) is also implemented:
+`/admin/games` to create/start/finish a Game, `/admin/game?id=` to create
+Teams (invite token auto-generated, QR code rendered client-side from the
+join URL) and Quizzes (TEXT requires an answer; IMAGE does not) under that
+Game.
 
 ## 18. Test requirements carried into implementation
 
