@@ -177,7 +177,7 @@ images. Volumes: `/srv/escapelink/postgres`, `/srv/escapelink/uploads`. `ddl-aut
 6. Image upload. 7. Admin review. 8. Admin manual override. 9. Final stage. 10. Leaderboard.
 11. Offline/reconnect hardening. 12. Raspberry Pi Docker deployment.
 
-Steps 1–9 are implemented (backend + a Next.js static-export frontend in `frontend/`,
+Steps 1–12 are implemented (backend + a Next.js static-export frontend in `frontend/`,
 covering QR join, TEXT answer submission, IMAGE submission with client-side
 resize/compression, an `/admin` console with session-based admin login,
 image approve/reject review, team control (force-complete a quiz, reset a
@@ -187,7 +187,10 @@ image, or an admin force-complete — distinct from an admin override; clear is
 idempotent (first clear time wins); a team reset clears all final-stage state
 along with the quizzes; and a public `/leaderboard` ranked by clear time then
 completed-quiz count, resolvable by explicit `gameId` or defaulting to the
-most recently started RUNNING game). 11–12 are designed above but not yet built.
+most recently started RUNNING game). Offline/reconnect hardening re-fetches the
+authoritative snapshot after WebSocket reconnect, browser resume, and network
+recovery; ambiguous answer retries reuse their request ID. Raspberry Pi deployment
+is defined by the root deployment Compose file and `deploy/` runbook.
 
 Content management (not in the original numbered phases, but required to use
 any of the above without hand-editing the database) is also implemented:

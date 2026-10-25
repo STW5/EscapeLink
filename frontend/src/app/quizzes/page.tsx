@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api, ApiError } from "@/lib/api";
 import { useTeamChannel } from "@/lib/ws";
+import { useRefreshOnResume } from "@/lib/connectivity";
 import type { QuizList, TeamState } from "@/lib/types";
 import GameTimer from "@/components/GameTimer";
 import StatusBadge from "@/components/StatusBadge";
@@ -36,11 +37,11 @@ export default function QuizzesPage() {
     loadAll();
   }, [loadAll]);
 
+  useRefreshOnResume(loadAll);
+
   // WebSocket is notify-only: on any completion event, just re-fetch the
   // authoritative snapshot instead of trying to patch local state.
-  useTeamChannel(teamState?.teamId ?? null, () => {
-    loadAll();
-  });
+  useTeamChannel(teamState?.teamId ?? null, loadAll, loadAll);
 
   if (loadError) {
     return (

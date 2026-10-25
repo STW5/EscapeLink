@@ -55,7 +55,7 @@ public class QuizAnswerService {
      */
     @Transactional(noRollbackFor = BusinessException.class)
     public AnswerResponse submit(Long teamId, Long quizId, String requestId, String rawAnswer, int runNo) {
-        Team team = teamRepository.findById(teamId)
+        Team team = teamRepository.findForUpdate(teamId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.TEAM_NOT_FOUND));
         if (!team.isCurrentRun(runNo)) {
             throw new BusinessException(ErrorCode.INVALID_RUN);

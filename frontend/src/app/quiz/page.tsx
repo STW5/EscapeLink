@@ -1,8 +1,11 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { api, ApiError } from "@/lib/api";
+import { createClientId } from "@/lib/device";
+import { useRefreshOnResume } from "@/lib/connectivity";
+import { useTeamChannel } from "@/lib/ws";
 import type { AnswerResult, QuizDetail, QuizProgressStatus, TeamState } from "@/lib/types";
 import StatusBadge from "@/components/StatusBadge";
 import ImageAnswerForm from "@/components/ImageAnswerForm";
@@ -33,6 +36,12 @@ function QuizDetailView() {
   >(null);
   const [cooldownUntil, setCooldownUntil] = useState<number | null>(null);
   const [cooldownSecondsLeft, setCooldownSecondsLeft] = useState(0);
+  const pendingAnswerRef = useRef<{
+    quizId: number;
+    runNo: number;
+    answer: string;
+    requestId: string;
+  } | null>(null);
 
   const load = useCallback(async () => {
     if (!quizId) return;
@@ -57,6 +66,9 @@ function QuizDetailView() {
     load();
   }, [load]);
 
+  useRefreshOnResume(load);
+  useTeamChannel(teamState?.teamId ?? null, load, load);
+
   useEffect(() => {
     if (!cooldownUntil) return;
     const tick = () => {
@@ -80,18 +92,40 @@ function QuizDetailView() {
 
     setSubmitting(true);
     setFeedback(null);
+    const submittedAnswer = answer.trim();
+    const pending = pendingAnswerRef.current;
+    const requestId =
+      pending &&
+      pending.quizId === quiz.id &&
+      pending.runNo === teamState.currentRunNo &&
+      pending.answer === submittedAnswer
+        ? pending.requestId
+        : createClientId();
+    pendingAnswerRef.current = {
+      quizId: quiz.id,
+      runNo: teamState.currentRunNo,
+      answer: submittedAnswer,
+      requestId,
+    };
+
     try {
       const result = await api.post<AnswerResult>(
         `/api/quizzes/${quiz.id}/answer`,
         {
-          requestId: crypto.randomUUID(),
-          answer: answer.trim(),
+          requestId,
+          answer: submittedAnswer,
           runNo: teamState.currentRunNo,
         }
       );
+      pendingAnswerRef.current = null;
       setQuiz({ ...quiz, status: result.status });
       setAnswer("");
     } catch (e) {
+      // A server response is definitive. Only retain the request id when the
+      // connection failed and the server may already have handled the request.
+      if (!(e instanceof ApiError && e.code === "NETWORK_ERROR")) {
+        pendingAnswerRef.current = null;
+      }
       if (e instanceof ApiError && e.code === "WRONG_ANSWER") {
         setFeedback({ kind: "wrong", message: "정답이 아닙니다." });
         setCooldownUntil(Date.now() + DEFAULT_COOLDOWN_SECONDS * 1000);

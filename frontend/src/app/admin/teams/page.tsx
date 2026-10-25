@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { adminApi, AdminApiError } from "@/lib/adminApi";
+import { useAdminChannel } from "@/lib/ws";
 import type { TeamSummary } from "@/lib/adminTypes";
 import TeamControlCard from "@/components/TeamControlCard";
 
@@ -30,6 +31,9 @@ export default function AdminTeamsPage() {
     load();
   }, [load]);
 
+  // Live updates: any committed change triggers a snapshot refetch.
+  useAdminChannel(load);
+
   if (error) {
     return (
       <main className="flex-1 flex items-center justify-center">
@@ -53,6 +57,9 @@ export default function AdminTeamsPage() {
         <div className="flex items-center gap-4">
           <a href="/admin/games" className="text-sm text-neutral-400">
             게임 관리
+          </a>
+          <a href="/admin/logs" className="text-sm text-neutral-400">
+            액션 로그
           </a>
           <a href="/admin/review" className="text-sm text-neutral-400">
             이미지 검수로

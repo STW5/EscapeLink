@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { adminApi, AdminApiError } from "@/lib/adminApi";
+import { useAdminChannel } from "@/lib/ws";
 import type { PendingSubmission } from "@/lib/adminTypes";
 import SubmissionCard from "@/components/SubmissionCard";
 
@@ -31,6 +32,9 @@ export default function AdminReviewPage() {
   useEffect(() => {
     load();
   }, [load]);
+
+  // Live updates: any committed change triggers a snapshot refetch.
+  useAdminChannel(load);
 
   function handleResolved(submissionId: number) {
     setSubmissions((prev) => prev?.filter((s) => s.submissionId !== submissionId) ?? null);
@@ -67,6 +71,9 @@ export default function AdminReviewPage() {
         <div className="flex items-center gap-4">
           <a href="/admin/games" className="text-sm text-neutral-400">
             게임 관리
+          </a>
+          <a href="/admin/logs" className="text-sm text-neutral-400">
+            액션 로그
           </a>
           <a href="/admin/teams" className="text-sm text-neutral-400">
             팀 관리

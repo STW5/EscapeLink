@@ -61,7 +61,7 @@ public class ImageSubmissionService {
 
     @Transactional
     public ImageSubmissionResponse submit(Long teamId, Long quizId, MultipartFile file) {
-        Team team = teamRepository.findById(teamId)
+        Team team = teamRepository.findForUpdate(teamId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.TEAM_NOT_FOUND));
 
         Game game = gameRepository.findById(team.getGameId())
@@ -80,7 +80,7 @@ public class ImageSubmissionService {
         int runNo = team.getCurrentRunNo();
         quizProgressRepository.insertIfAbsent(teamId, quizId, runNo);
         QuizProgress progress = quizProgressRepository
-                .findByTeamIdAndQuizIdAndRunNo(teamId, quizId, runNo)
+                .findForUpdate(teamId, quizId, runNo)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_ERROR));
         if (progress.isCompleted()) {
             throw new BusinessException(ErrorCode.QUIZ_ALREADY_COMPLETED);

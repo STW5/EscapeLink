@@ -13,11 +13,14 @@ import type { TeamEvent } from "./types";
  */
 export function useTeamChannel(
   teamId: number | null,
-  onTeamEvent: (message: TeamEvent) => void
+  onTeamEvent: (message: TeamEvent) => void,
+  onConnected?: () => void
 ) {
   const handlerRef = useRef(onTeamEvent);
+  const connectedRef = useRef(onConnected);
   useEffect(() => {
     handlerRef.current = onTeamEvent;
+    connectedRef.current = onConnected;
   });
 
   useEffect(() => {
@@ -25,9 +28,10 @@ export function useTeamChannel(
       return;
     }
 
+    const webSocketBaseUrl = API_BASE_URL || window.location.origin;
     const client = new Client({
       webSocketFactory: () =>
-        new SockJS(`${API_BASE_URL}/ws`) as unknown as IStompSocket,
+        new SockJS(new URL("/ws", webSocketBaseUrl).toString()) as unknown as IStompSocket,
       reconnectDelay: 3000,
       onConnect: () => {
         client.subscribe(`/topic/teams/${teamId}`, (message: IMessage) => {
@@ -38,6 +42,9 @@ export function useTeamChannel(
             // ignore malformed payloads
           }
         });
+        // WebSocket events are notify-only and may be missed while disconnected.
+        // Every initial connection/reconnection therefore reloads the DB snapshot.
+        connectedRef.current?.();
       },
     });
 
@@ -46,4 +53,45 @@ export function useTeamChannel(
       client.deactivate();
     };
   }, [teamId]);
+}
+
+/**
+ * Admin console variant: subscribes to the admin-only topic, authenticated by
+ * the admin login session. Events only say "something changed" — callers
+ * refetch the authoritative snapshot, both on events and on (re)connect.
+ */
+export function useAdminChannel(onChange: () => void) {
+  const handlerRef = useRef(onChange);
+  useEffect(() => {
+    handlerRef.current = onChange;
+  });
+
+  useEffect(() => {
+    const webSocketBaseUrl = API_BASE_URL || window.location.origin;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    // Bursts of events (e.g. several teams finishing together) collapse into one refetch.
+    const notify = () => {
+      if (timer) return;
+      timer = setTimeout(() => {
+        timer = null;
+        handlerRef.current();
+      }, 300);
+    };
+
+    const client = new Client({
+      webSocketFactory: () =>
+        new SockJS(new URL("/ws", webSocketBaseUrl).toString()) as unknown as IStompSocket,
+      reconnectDelay: 3000,
+      onConnect: () => {
+        client.subscribe("/topic/admin", notify);
+        notify();
+      },
+    });
+
+    client.activate();
+    return () => {
+      if (timer) clearTimeout(timer);
+      client.deactivate();
+    };
+  }, []);
 }

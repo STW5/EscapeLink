@@ -1,5 +1,6 @@
 package com.stw.escapelink.global.websocket;
 
+import com.stw.escapelink.admin.service.AdminMonitorWebSocketEventListener;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -25,6 +26,17 @@ public class TeamChannelInterceptor implements ChannelInterceptor {
 
         if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
             String destination = accessor.getDestination();
+            boolean admin = accessor.getSessionAttributes() != null
+                    && Boolean.TRUE.equals(accessor.getSessionAttributes().get(TeamSessionHandshakeInterceptor.ADMIN_ATTRIBUTE));
+            if (admin) {
+                if (!AdminMonitorWebSocketEventListener.ADMIN_TOPIC.equals(destination)) {
+                    throw new MessagingException("Subscription rejected: admin sockets only monitor the admin topic");
+                }
+                return message;
+            }
+            if (AdminMonitorWebSocketEventListener.ADMIN_TOPIC.equals(destination)) {
+                throw new MessagingException("Subscription rejected: admin only");
+            }
             Object teamIdAttr = accessor.getSessionAttributes() == null
                     ? null
                     : accessor.getSessionAttributes().get(TeamSessionHandshakeInterceptor.TEAM_ID_ATTRIBUTE);

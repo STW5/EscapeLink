@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "./api";
 import type { ApiResponse } from "./types";
-import type { Game, PendingSubmission, QuizAdmin, TeamSummary } from "./adminTypes";
+import type { AdminActionLog, Game, PendingSubmission, QuizAdmin, TeamSummary } from "./adminTypes";
 
 export class AdminApiError extends Error {
   code: string;
@@ -67,6 +67,11 @@ export const adminApi = {
 
   forceFinalStage: (teamId: number) =>
     request<void>(`/api/admin/teams/${teamId}/force-final-stage`, { method: "POST" }),
+
+  listActionLogs: (teamId?: number) =>
+    request<AdminActionLog[]>(
+      `/api/admin/action-logs${teamId != null ? `?teamId=${teamId}` : ""}`
+    ),
 
   listGames: () => request<Game[]>("/api/admin/games"),
 

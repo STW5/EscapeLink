@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { api, ApiError } from "@/lib/api";
 import type { TeamState } from "@/lib/types";
 import { useTeamChannel } from "@/lib/ws";
+import { useRefreshOnResume } from "@/lib/connectivity";
 
 export default function FinalStagePage() {
   const router = useRouter();
@@ -31,9 +32,8 @@ export default function FinalStagePage() {
     load();
   }, [load]);
 
-  useTeamChannel(teamState?.teamId ?? null, () => {
-    load();
-  });
+  useRefreshOnResume(load);
+  useTeamChannel(teamState?.teamId ?? null, load, load);
 
   async function handleClear() {
     setClearing(true);

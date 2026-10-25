@@ -58,6 +58,7 @@ public class ImageReviewService {
         // lost to gets reviewed — "latest" is checked against ALL versions ever
         // created for that (team, quiz, run), not just the other pending ones.
         return pending.stream()
+                .filter(this::isCurrentRun)
                 .filter(this::isLatestVersion)
                 .sorted(Comparator.comparing(ImageSubmission::getCreatedAt))
                 .map(this::toResponse)
@@ -72,9 +73,9 @@ public class ImageReviewService {
 
     @Transactional
     public void approve(String adminUsername, Long submissionId) {
-        ImageSubmission submission = getReviewableSubmission(submissionId);
-
-        QuizProgress progress = findProgressOrThrow(submission);
+        ReviewContext review = getReviewableSubmission(submissionId);
+        ImageSubmission submission = review.submission();
+        QuizProgress progress = review.progress();
         progress.complete();
         quizProgressRepository.save(progress);
 
@@ -91,9 +92,9 @@ public class ImageReviewService {
 
     @Transactional
     public void reject(String adminUsername, Long submissionId, String reason) {
-        ImageSubmission submission = getReviewableSubmission(submissionId);
-
-        QuizProgress progress = findProgressOrThrow(submission);
+        ReviewContext review = getReviewableSubmission(submissionId);
+        ImageSubmission submission = review.submission();
+        QuizProgress progress = review.progress();
         progress.revertToUnsolved();
         quizProgressRepository.save(progress);
 
@@ -107,8 +108,20 @@ public class ImageReviewService {
                 new ImageReviewedEvent(submission.getTeamId(), submission.getQuizId(), false, reason));
     }
 
-    private ImageSubmission getReviewableSubmission(Long submissionId) {
-        ImageSubmission submission = getSubmissionOrThrow(submissionId);
+    private ReviewContext getReviewableSubmission(Long submissionId) {
+        Long teamId = imageSubmissionRepository.findTeamIdById(submissionId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.SUBMISSION_NOT_FOUND));
+        Team team = teamRepository.findForUpdate(teamId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.TEAM_NOT_FOUND));
+        ImageSubmission submission = imageSubmissionRepository.findForUpdate(submissionId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.SUBMISSION_NOT_FOUND));
+        if (!team.isCurrentRun(submission.getRunNo())) {
+            throw new BusinessException(ErrorCode.INVALID_RUN);
+        }
+
+        QuizProgress progress = quizProgressRepository.findForUpdate(
+                        submission.getTeamId(), submission.getQuizId(), submission.getRunNo())
+                .orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_ERROR));
         if (!submission.isPending()) {
             throw new BusinessException(ErrorCode.SUBMISSION_ALREADY_REVIEWED);
         }
@@ -118,7 +131,13 @@ public class ImageReviewService {
             throw new BusinessException(ErrorCode.SUBMISSION_ALREADY_REVIEWED);
         }
 
-        return submission;
+        return new ReviewContext(submission, progress);
+    }
+
+    private boolean isCurrentRun(ImageSubmission submission) {
+        return teamRepository.findById(submission.getTeamId())
+                .map(team -> team.isCurrentRun(submission.getRunNo()))
+                .orElse(false);
     }
 
     private boolean isLatestVersion(ImageSubmission submission) {
@@ -127,12 +146,6 @@ public class ImageReviewService {
                         submission.getTeamId(), submission.getQuizId(), submission.getRunNo())
                 .map(latest -> latest.getId().equals(submission.getId()))
                 .orElse(false);
-    }
-
-    private QuizProgress findProgressOrThrow(ImageSubmission submission) {
-        return quizProgressRepository
-                .findByTeamIdAndQuizIdAndRunNo(submission.getTeamId(), submission.getQuizId(), submission.getRunNo())
-                .orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_ERROR));
     }
 
     private PendingSubmissionResponse toResponse(ImageSubmission submission) {
@@ -144,5 +157,8 @@ public class ImageReviewService {
         return new PendingSubmissionResponse(
                 submission.getId(), submission.getTeamId(), teamName,
                 submission.getQuizId(), quizTitle, submission.getSubmissionVersion(), submission.getCreatedAt());
+    }
+
+    private record ReviewContext(ImageSubmission submission, QuizProgress progress) {
     }
 }

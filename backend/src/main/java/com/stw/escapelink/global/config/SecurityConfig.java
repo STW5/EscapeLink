@@ -32,6 +32,8 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http,
                                                          CorsProperties corsProperties,
+                                                         TeamSessionRepository teamSessionRepository,
+                                                         TeamSessionProperties teamSessionProperties,
                                                          RestAuthenticationEntryPoint entryPoint,
                                                          RestAccessDeniedHandler accessDeniedHandler,
                                                          AdminLoginSuccessHandler loginSuccessHandler,
@@ -40,9 +42,13 @@ public class SecurityConfig {
         // Session-cookie admin console: same CSRF reasoning as the participant API
         // chain (JSON-only state-changing endpoints + SameSite=Lax cookie) rather
         // than a CSRF token — kept consistent rather than mixing two models.
+        TeamSessionAuthenticationFilter teamFilter =
+                new TeamSessionAuthenticationFilter(teamSessionRepository, teamSessionProperties);
+
         http.securityMatcher("/api/admin/**")
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource(corsProperties)))
+                .addFilterBefore(teamFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(entryPoint)
                         .accessDeniedHandler(accessDeniedHandler))

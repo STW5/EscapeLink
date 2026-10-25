@@ -79,7 +79,7 @@ public class AdminTeamService {
 
         int runNo = team.getCurrentRunNo();
         quizProgressRepository.insertIfAbsent(teamId, quiz.getId(), runNo);
-        QuizProgress progress = quizProgressRepository.findByTeamIdAndQuizIdAndRunNo(teamId, quiz.getId(), runNo)
+        QuizProgress progress = quizProgressRepository.findForUpdate(teamId, quiz.getId(), runNo)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_ERROR));
         progress.complete();
         quizProgressRepository.save(progress);
@@ -116,7 +116,7 @@ public class AdminTeamService {
     }
 
     private Team getTeamOrThrow(Long teamId) {
-        return teamRepository.findById(teamId)
+        return teamRepository.findForUpdate(teamId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.TEAM_NOT_FOUND));
     }
 

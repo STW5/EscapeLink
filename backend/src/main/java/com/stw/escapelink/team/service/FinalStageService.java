@@ -35,7 +35,7 @@ public class FinalStageService {
      */
     @Transactional
     public void checkAndUnlockIfAllCompleted(Long teamId) {
-        Team team = teamRepository.findById(teamId)
+        Team team = teamRepository.findForUpdate(teamId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.TEAM_NOT_FOUND));
         if (team.isFinalStageUnlocked()) {
             return;
@@ -56,7 +56,7 @@ public class FinalStageService {
     /** Idempotent: a repeated clear request never changes the recorded clear time. */
     @Transactional
     public Instant clearFinalStage(Long teamId) {
-        Team team = teamRepository.findById(teamId)
+        Team team = teamRepository.findForUpdate(teamId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.TEAM_NOT_FOUND));
         if (!team.isFinalStageUnlocked()) {
             throw new BusinessException(ErrorCode.FINAL_STAGE_NOT_UNLOCKED);

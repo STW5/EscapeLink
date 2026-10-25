@@ -40,3 +40,22 @@ export type QuizAdmin = {
   hintDelaySeconds: number;
   answer: string | null;
 };
+
+export type AdminActionType =
+  | "APPROVE_IMAGE"
+  | "REJECT_IMAGE"
+  | "FORCE_COMPLETE"
+  | "RESET_TEAM"
+  | "FORCE_FINAL_STAGE";
+
+export type AdminActionLog = {
+  id: number;
+  adminUsername: string;
+  action: AdminActionType;
+  teamId: number | null;
+  teamName: string | null;
+  quizId: number | null;
+  quizTitle: string | null;
+  detail: string | null;
+  createdAt: string;
+};

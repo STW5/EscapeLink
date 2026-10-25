@@ -20,17 +20,35 @@ async function request<T>(
 ): Promise<T> {
   const isFormData = init?.body instanceof FormData;
 
-  const res = await fetch(`${API_BASE_URL}${path}`, {
-    ...init,
-    credentials: "include",
-    headers: {
-      // FormData sets its own multipart boundary; a manual Content-Type breaks it.
-      ...(isFormData ? {} : { "Content-Type": "application/json" }),
-      ...init?.headers,
-    },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE_URL}${path}`, {
+      ...init,
+      credentials: "include",
+      headers: {
+        // FormData sets its own multipart boundary; a manual Content-Type breaks it.
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
+        ...init?.headers,
+      },
+    });
+  } catch {
+    throw new ApiError(
+      "NETWORK_ERROR",
+      "네트워크 연결을 확인한 뒤 다시 시도해주세요.",
+      null
+    );
+  }
 
-  const body = (await res.json()) as ApiResponse<T>;
+  let body: ApiResponse<T>;
+  try {
+    body = (await res.json()) as ApiResponse<T>;
+  } catch {
+    throw new ApiError(
+      "INVALID_RESPONSE",
+      "서버 응답을 처리하지 못했습니다. 잠시 후 다시 시도해주세요.",
+      null
+    );
+  }
 
   if (!body.success) {
     throw new ApiError(body.code, body.message ?? "요청에 실패했습니다.", body.data);
