@@ -34,12 +34,12 @@ export default function TeamControlCard({
   }
 
   function handleReset() {
-    if (!window.confirm(`${team.teamName}을 초기화할까요? (진행 상태가 전부 미해결로 리셋됩니다)`)) return;
+    if (!window.confirm(`'${team.teamName}' 팀을 초기화할까요? (진행 상태가 전부 미해결로 리셋됩니다)`)) return;
     run(() => adminApi.resetTeam(team.teamId));
   }
 
   function handleForceFinalStage() {
-    if (!window.confirm(`${team.teamName}을 최종 스테이지로 강제 진입시킬까요?`)) return;
+    if (!window.confirm(`'${team.teamName}' 팀을 최종 스테이지로 강제 진입시킬까요?`)) return;
     run(() => adminApi.forceFinalStage(team.teamId));
   }
 

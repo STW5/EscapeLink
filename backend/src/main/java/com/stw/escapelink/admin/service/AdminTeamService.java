@@ -19,6 +19,7 @@ import com.stw.escapelink.team.repository.TeamRepository;
 import com.stw.escapelink.team.service.FinalStageService;
 import com.stw.escapelink.team.service.TeamControlEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,12 +39,13 @@ public class AdminTeamService {
     private final SecureTokenGenerator secureTokenGenerator;
     private final FinalStageService finalStageService;
     private final ApplicationEventPublisher eventPublisher;
+    private final AdminContentCleaner contentCleaner;
 
     public AdminTeamService(TeamRepository teamRepository, GameRepository gameRepository,
                              QuizRepository quizRepository, QuizProgressRepository quizProgressRepository,
                              QuizQueryService quizQueryService, AdminActionLogRepository adminActionLogRepository,
                              SecureTokenGenerator secureTokenGenerator, FinalStageService finalStageService,
-                             ApplicationEventPublisher eventPublisher) {
+                             ApplicationEventPublisher eventPublisher, AdminContentCleaner contentCleaner) {
         this.teamRepository = teamRepository;
         this.gameRepository = gameRepository;
         this.quizRepository = quizRepository;
@@ -53,6 +55,7 @@ public class AdminTeamService {
         this.secureTokenGenerator = secureTokenGenerator;
         this.finalStageService = finalStageService;
         this.eventPublisher = eventPublisher;
+        this.contentCleaner = contentCleaner;
     }
 
     @Transactional
@@ -67,7 +70,7 @@ public class AdminTeamService {
 
     @Transactional(readOnly = true)
     public List<TeamSummaryResponse> listTeams() {
-        return teamRepository.findAll().stream().map(this::toSummary).toList();
+        return teamRepository.findAll(Sort.by("id")).stream().map(this::toSummary).toList();
     }
 
     @Transactional
@@ -113,6 +116,46 @@ public class AdminTeamService {
                 teamId, null, null));
 
         eventPublisher.publishEvent(TeamControlEvent.forceFinalStage(teamId));
+    }
+
+    @Transactional
+    public TeamSummaryResponse renameTeam(String adminUsername, Long teamId, String name) {
+        Team team = getTeamOrThrow(teamId);
+        String previous = team.getName();
+        team.rename(name);
+        teamRepository.save(team);
+
+        adminActionLogRepository.save(new AdminActionLog(adminUsername, AdminAction.UPDATE_TEAM,
+                teamId, null, AdminLogDetails.of("name=" + previous + " -> " + name)));
+        eventPublisher.publishEvent(new AdminDataChangedEvent("TEAM_UPDATED", teamId, null));
+        return toSummary(team);
+    }
+
+    @Transactional
+    public TeamSummaryResponse regenerateInviteToken(String adminUsername, Long teamId) {
+        Team team = getTeamOrThrow(teamId);
+        team.regenerateInviteToken(secureTokenGenerator.generate(INVITE_TOKEN_BYTE_LENGTH));
+        teamRepository.save(team);
+
+        adminActionLogRepository.save(new AdminActionLog(adminUsername, AdminAction.REGENERATE_INVITE,
+                teamId, null, null));
+        eventPublisher.publishEvent(new AdminDataChangedEvent("TEAM_UPDATED", teamId, null));
+        return toSummary(team);
+    }
+
+    /** While the game is running, a team that already has progress must be kept (reset it instead). */
+    @Transactional
+    public void deleteTeam(String adminUsername, Long teamId) {
+        Team team = getTeamOrThrow(teamId);
+        boolean running = gameRepository.findById(team.getGameId()).map(Game::isRunning).orElse(false);
+        contentCleaner.requireNoTeamActivityWhileRunning(running, teamId);
+
+        contentCleaner.purgeTeam(teamId);
+        teamRepository.delete(team);
+
+        adminActionLogRepository.save(new AdminActionLog(adminUsername, AdminAction.DELETE_TEAM,
+                teamId, null, AdminLogDetails.of("team=" + team.getName())));
+        eventPublisher.publishEvent(new AdminDataChangedEvent("TEAM_DELETED", teamId, null));
     }
 
     private Team getTeamOrThrow(Long teamId) {

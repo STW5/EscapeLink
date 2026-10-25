@@ -46,7 +46,14 @@ export type AdminActionType =
   | "REJECT_IMAGE"
   | "FORCE_COMPLETE"
   | "RESET_TEAM"
-  | "FORCE_FINAL_STAGE";
+  | "FORCE_FINAL_STAGE"
+  | "UPDATE_GAME"
+  | "DELETE_GAME"
+  | "UPDATE_TEAM"
+  | "DELETE_TEAM"
+  | "REGENERATE_INVITE"
+  | "UPDATE_QUIZ"
+  | "DELETE_QUIZ";
 
 export type AdminActionLog = {
   id: number;

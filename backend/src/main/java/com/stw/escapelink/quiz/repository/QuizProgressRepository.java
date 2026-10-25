@@ -15,6 +15,18 @@ public interface QuizProgressRepository extends JpaRepository<QuizProgress, Long
 
     Optional<QuizProgress> findByTeamIdAndQuizIdAndRunNo(Long teamId, Long quizId, int runNo);
 
+    boolean existsByTeamId(Long teamId);
+
+    boolean existsByQuizId(Long quizId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("delete from QuizProgress p where p.teamId = :teamId")
+    void deleteByTeamId(@Param("teamId") Long teamId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("delete from QuizProgress p where p.quizId = :quizId")
+    void deleteByQuizId(@Param("quizId") Long quizId);
+
     List<QuizProgress> findByTeamIdAndRunNo(Long teamId, int runNo);
 
     /**

@@ -41,6 +41,11 @@ public class AdminMonitorWebSocketEventListener {
         send(event.type(), event.teamId(), event.quizId());
     }
 
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void onDataChanged(AdminDataChangedEvent event) {
+        send(event.type(), event.teamId(), event.quizId());
+    }
+
     private void send(String type, Long teamId, Long quizId) {
         messagingTemplate.convertAndSend(ADMIN_TOPIC, new AdminMonitorMessage(type, teamId, quizId));
     }

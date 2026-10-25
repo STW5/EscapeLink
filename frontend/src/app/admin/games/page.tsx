@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { adminApi, AdminApiError } from "@/lib/adminApi";
 import type { Game } from "@/lib/adminTypes";
+import { useAdminChannel } from "@/lib/ws";
+import AdminNav from "@/components/AdminNav";
 
 const STATUS_LABELS: Record<Game["status"], string> = {
   READY: "대기",
@@ -36,6 +38,8 @@ export default function AdminGamesPage() {
     load();
   }, [load]);
 
+  useAdminChannel(load);
+
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     if (!title.trim()) return;
@@ -61,14 +65,9 @@ export default function AdminGamesPage() {
   }
 
   return (
-    <main className="flex-1 px-5 py-8 max-w-xl mx-auto w-full space-y-6">
-      <header className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">게임 관리</h1>
-        <div className="flex items-center gap-4 text-sm text-neutral-400">
-          <a href="/admin/teams">팀 관리</a>
-          <a href="/admin/review">이미지 검수</a>
-        </div>
-      </header>
+    <main className="flex-1 px-5 py-6 max-w-xl mx-auto w-full space-y-6">
+      <AdminNav />
+      <h1 className="text-xl font-bold">게임</h1>
 
       <form onSubmit={handleCreate} className="flex gap-2">
         <input

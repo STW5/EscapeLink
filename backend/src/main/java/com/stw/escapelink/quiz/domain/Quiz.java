@@ -67,6 +67,15 @@ public class Quiz {
         this.hintDelaySeconds = hintDelaySeconds;
     }
 
+    /** The quiz type is deliberately immutable: progress and submissions depend on it. */
+    public void update(String title, String content, int orderNo, String hint, int hintDelaySeconds) {
+        this.title = title;
+        this.content = content;
+        this.orderNo = orderNo;
+        this.hint = hint;
+        this.hintDelaySeconds = hintDelaySeconds;
+    }
+
     @PrePersist
     void onCreate() {
         Instant now = Instant.now();

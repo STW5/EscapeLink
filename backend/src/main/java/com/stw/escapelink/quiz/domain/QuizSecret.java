@@ -36,6 +36,10 @@ public class QuizSecret {
         this.answer = answer;
     }
 
+    public void changeAnswer(String answer) {
+        this.answer = answer;
+    }
+
     public boolean matches(String normalizedInput) {
         return normalize(answer).equals(normalizedInput);
     }

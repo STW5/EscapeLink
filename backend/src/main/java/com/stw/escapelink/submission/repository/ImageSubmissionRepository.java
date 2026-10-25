@@ -5,6 +5,7 @@ import com.stw.escapelink.submission.domain.ImageSubmissionStatus;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -15,6 +16,18 @@ public interface ImageSubmissionRepository extends JpaRepository<ImageSubmission
 
     Optional<ImageSubmission> findTopByTeamIdAndQuizIdAndRunNoOrderBySubmissionVersionDesc(
             Long teamId, Long quizId, int runNo);
+
+    boolean existsByTeamId(Long teamId);
+
+    boolean existsByQuizId(Long quizId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("delete from ImageSubmission s where s.teamId = :teamId")
+    void deleteByTeamId(@Param("teamId") Long teamId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("delete from ImageSubmission s where s.quizId = :quizId")
+    void deleteByQuizId(@Param("quizId") Long quizId);
 
     List<ImageSubmission> findByStatusOrderByCreatedAtAsc(ImageSubmissionStatus status);
 

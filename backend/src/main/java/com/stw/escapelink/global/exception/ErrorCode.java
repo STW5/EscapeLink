@@ -21,6 +21,7 @@ public enum ErrorCode {
     SUBMISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "제출물을 찾을 수 없습니다."),
     SUBMISSION_ALREADY_REVIEWED(HttpStatus.CONFLICT, "이미 검수 처리된 제출물입니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
+    RESOURCE_IN_USE(HttpStatus.CONFLICT, "진행 중인 게임에서는 진행 기록이 있는 항목을 삭제할 수 없습니다. 게임을 종료한 뒤 삭제하세요."),
     VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "요청 값이 올바르지 않습니다."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "일시적인 오류가 발생했습니다.");
 

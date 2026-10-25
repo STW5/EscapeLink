@@ -1,14 +1,17 @@
 package com.stw.escapelink.admin.controller;
 
 import com.stw.escapelink.admin.dto.CreateTeamRequest;
+import com.stw.escapelink.admin.dto.RenameTeamRequest;
 import com.stw.escapelink.admin.dto.TeamSummaryResponse;
 import com.stw.escapelink.admin.service.AdminTeamService;
 import com.stw.escapelink.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +35,24 @@ public class AdminTeamController {
     @GetMapping("/api/admin/teams")
     public ApiResponse<List<TeamSummaryResponse>> listTeams() {
         return ApiResponse.ok(adminTeamService.listTeams());
+    }
+
+    @PutMapping("/api/admin/teams/{teamId}")
+    public ApiResponse<TeamSummaryResponse> renameTeam(Authentication authentication, @PathVariable Long teamId,
+                                                         @Valid @RequestBody RenameTeamRequest request) {
+        return ApiResponse.ok(adminTeamService.renameTeam(authentication.getName(), teamId, request.name()));
+    }
+
+    @PostMapping("/api/admin/teams/{teamId}/regenerate-invite")
+    public ApiResponse<TeamSummaryResponse> regenerateInvite(Authentication authentication,
+                                                               @PathVariable Long teamId) {
+        return ApiResponse.ok(adminTeamService.regenerateInviteToken(authentication.getName(), teamId));
+    }
+
+    @DeleteMapping("/api/admin/teams/{teamId}")
+    public ApiResponse<Void> deleteTeam(Authentication authentication, @PathVariable Long teamId) {
+        adminTeamService.deleteTeam(authentication.getName(), teamId);
+        return ApiResponse.ok();
     }
 
     @PostMapping("/api/admin/teams/{teamId}/quizzes/{quizId}/force-complete")

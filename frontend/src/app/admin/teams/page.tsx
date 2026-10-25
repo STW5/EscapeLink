@@ -4,19 +4,28 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { adminApi, AdminApiError } from "@/lib/adminApi";
 import { useAdminChannel } from "@/lib/ws";
-import type { TeamSummary } from "@/lib/adminTypes";
+import type { Game, TeamSummary } from "@/lib/adminTypes";
+import AdminNav from "@/components/AdminNav";
 import TeamControlCard from "@/components/TeamControlCard";
+
+const STATUS_LABELS: Record<Game["status"], string> = {
+  READY: "대기",
+  RUNNING: "진행 중",
+  FINISHED: "종료",
+};
 
 export default function AdminTeamsPage() {
   const router = useRouter();
   const [teams, setTeams] = useState<TeamSummary[] | null>(null);
+  const [games, setGames] = useState<Game[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
       await adminApi.me();
-      const list = await adminApi.listTeams();
+      const [list, gameList] = await Promise.all([adminApi.listTeams(), adminApi.listGames()]);
       setTeams(list);
+      setGames(gameList);
       setError(null);
     } catch (e) {
       if (e instanceof AdminApiError) {
@@ -50,28 +59,36 @@ export default function AdminTeamsPage() {
     );
   }
 
-  return (
-    <main className="flex-1 px-5 py-8 max-w-2xl mx-auto w-full space-y-6">
-      <header className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">팀 관리</h1>
-        <div className="flex items-center gap-4">
-          <a href="/admin/games" className="text-sm text-neutral-400">
-            게임 관리
-          </a>
-          <a href="/admin/logs" className="text-sm text-neutral-400">
-            액션 로그
-          </a>
-          <a href="/admin/review" className="text-sm text-neutral-400">
-            이미지 검수로
-          </a>
-        </div>
-      </header>
+  // Running games first, so the teams that matter during an event are on top.
+  const order = { RUNNING: 0, READY: 1, FINISHED: 2 } as const;
+  const groups = games
+    .map((game) => ({ game, teams: teams.filter((t) => t.gameId === game.id) }))
+    .filter((g) => g.teams.length > 0)
+    .sort((a, b) => order[a.game.status] - order[b.game.status] || b.game.id - a.game.id);
 
-      <div className="space-y-4">
-        {teams.map((team) => (
-          <TeamControlCard key={team.teamId} team={team} onChanged={load} />
-        ))}
-      </div>
+  return (
+    <main className="flex-1 px-5 py-6 max-w-2xl mx-auto w-full space-y-6">
+      <AdminNav />
+      <h1 className="text-xl font-bold">팀 현황</h1>
+
+      {groups.length === 0 && <p className="text-center text-neutral-500 py-12">팀이 아직 없습니다.</p>}
+
+      {groups.map(({ game, teams: gameTeams }) => (
+        <section key={game.id} className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold">
+              {game.title}
+              <span className="ml-2 text-xs font-normal text-neutral-500">{STATUS_LABELS[game.status]}</span>
+            </h2>
+            <a href={`/admin/game?id=${game.id}`} className="text-xs text-neutral-500">
+              관리 →
+            </a>
+          </div>
+          {gameTeams.map((team) => (
+            <TeamControlCard key={team.teamId} team={team} onChanged={load} />
+          ))}
+        </section>
+      ))}
     </main>
   );
 }

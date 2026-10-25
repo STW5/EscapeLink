@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { adminApi, AdminApiError } from "@/lib/adminApi";
 import type { AdminActionLog, AdminActionType } from "@/lib/adminTypes";
 import { useAdminChannel } from "@/lib/ws";
+import AdminNav from "@/components/AdminNav";
 
 const ACTION_LABELS: Record<AdminActionType, string> = {
   APPROVE_IMAGE: "이미지 승인",
@@ -12,6 +13,13 @@ const ACTION_LABELS: Record<AdminActionType, string> = {
   FORCE_COMPLETE: "퀴즈 강제 완료",
   RESET_TEAM: "팀 초기화",
   FORCE_FINAL_STAGE: "최종 미션 강제 오픈",
+  UPDATE_GAME: "게임 수정",
+  DELETE_GAME: "게임 삭제",
+  UPDATE_TEAM: "팀 이름 변경",
+  DELETE_TEAM: "팀 삭제",
+  REGENERATE_INVITE: "초대코드 재발급",
+  UPDATE_QUIZ: "문제 수정",
+  DELETE_QUIZ: "문제 삭제",
 };
 
 export default function AdminLogsPage() {
@@ -56,18 +64,9 @@ export default function AdminLogsPage() {
   }
 
   return (
-    <main className="flex-1 px-5 py-8 max-w-2xl mx-auto w-full space-y-6">
-      <header className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">액션 로그</h1>
-        <div className="flex items-center gap-4">
-          <a href="/admin/teams" className="text-sm text-neutral-400">
-            팀 관리
-          </a>
-          <a href="/admin/review" className="text-sm text-neutral-400">
-            이미지 검수
-          </a>
-        </div>
-      </header>
+    <main className="flex-1 px-5 py-6 max-w-2xl mx-auto w-full space-y-6">
+      <AdminNav />
+      <h1 className="text-xl font-bold">액션 로그</h1>
 
       {logs.length === 0 ? (
         <p className="text-center text-neutral-500 py-12">기록된 액션이 없습니다.</p>

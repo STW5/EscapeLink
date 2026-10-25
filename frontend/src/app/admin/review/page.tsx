@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { adminApi, AdminApiError } from "@/lib/adminApi";
 import { useAdminChannel } from "@/lib/ws";
 import type { PendingSubmission } from "@/lib/adminTypes";
+import AdminNav from "@/components/AdminNav";
 import SubmissionCard from "@/components/SubmissionCard";
 
 export default function AdminReviewPage() {
@@ -40,11 +41,6 @@ export default function AdminReviewPage() {
     setSubmissions((prev) => prev?.filter((s) => s.submissionId !== submissionId) ?? null);
   }
 
-  async function handleLogout() {
-    await adminApi.logout().catch(() => {});
-    router.push("/admin/login");
-  }
-
   if (error) {
     return (
       <main className="flex-1 flex items-center justify-center">
@@ -62,27 +58,12 @@ export default function AdminReviewPage() {
   }
 
   return (
-    <main className="flex-1 px-5 py-8 max-w-2xl mx-auto w-full space-y-6">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold">이미지 검수</h1>
-          <p className="text-sm text-neutral-400">{username} 로그인 중</p>
-        </div>
-        <div className="flex items-center gap-4">
-          <a href="/admin/games" className="text-sm text-neutral-400">
-            게임 관리
-          </a>
-          <a href="/admin/logs" className="text-sm text-neutral-400">
-            액션 로그
-          </a>
-          <a href="/admin/teams" className="text-sm text-neutral-400">
-            팀 관리
-          </a>
-          <button onClick={handleLogout} className="text-sm text-neutral-400">
-            로그아웃
-          </button>
-        </div>
-      </header>
+    <main className="flex-1 px-5 py-6 max-w-2xl mx-auto w-full space-y-6">
+      <AdminNav />
+      <div>
+        <h1 className="text-xl font-bold">이미지 검수</h1>
+        <p className="text-sm text-neutral-400">{username} 로그인 중</p>
+      </div>
 
       {submissions.length === 0 ? (
         <p className="text-center text-neutral-500 py-12">검수 대기 중인 제출물이 없습니다.</p>

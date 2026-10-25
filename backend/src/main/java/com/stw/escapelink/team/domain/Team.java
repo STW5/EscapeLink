@@ -28,7 +28,7 @@ public class Team {
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "invite_token", nullable = false, updatable = false)
+    @Column(name = "invite_token", nullable = false)
     private String inviteToken;
 
     @Column(name = "current_run_no", nullable = false)
@@ -59,6 +59,15 @@ public class Team {
         this.name = name;
         this.inviteToken = inviteToken;
         this.currentRunNo = 1;
+    }
+
+    public void rename(String name) {
+        this.name = name;
+    }
+
+    /** Invalidates the old QR code; sessions that already joined keep working. */
+    public void regenerateInviteToken(String inviteToken) {
+        this.inviteToken = inviteToken;
     }
 
     @PrePersist

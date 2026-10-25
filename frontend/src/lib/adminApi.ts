@@ -24,6 +24,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return body.data as T;
 }
 
+function sendJson<T>(method: "PUT", path: string, payload: unknown): Promise<T> {
+  return request<T>(path, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+
 function postJson<T>(path: string, payload: unknown): Promise<T> {
   return request<T>(path, {
     method: "POST",
@@ -72,6 +80,35 @@ export const adminApi = {
     request<AdminActionLog[]>(
       `/api/admin/action-logs${teamId != null ? `?teamId=${teamId}` : ""}`
     ),
+
+  updateGame: (
+    gameId: number,
+    payload: { title: string; startAt: string | null; endAt: string | null }
+  ) => sendJson<Game>("PUT", `/api/admin/games/${gameId}`, payload),
+
+  deleteGame: (gameId: number) => request<void>(`/api/admin/games/${gameId}`, { method: "DELETE" }),
+
+  renameTeam: (teamId: number, name: string) =>
+    sendJson<TeamSummary>("PUT", `/api/admin/teams/${teamId}`, { name }),
+
+  regenerateInvite: (teamId: number) =>
+    request<TeamSummary>(`/api/admin/teams/${teamId}/regenerate-invite`, { method: "POST" }),
+
+  deleteTeam: (teamId: number) => request<void>(`/api/admin/teams/${teamId}`, { method: "DELETE" }),
+
+  updateQuiz: (
+    quizId: number,
+    payload: {
+      title: string;
+      content: string;
+      orderNo: number;
+      hint: string;
+      hintDelaySeconds: number;
+      answer?: string;
+    }
+  ) => sendJson<QuizAdmin>("PUT", `/api/admin/quizzes/${quizId}`, payload),
+
+  deleteQuiz: (quizId: number) => request<void>(`/api/admin/quizzes/${quizId}`, { method: "DELETE" }),
 
   listGames: () => request<Game[]>("/api/admin/games"),
 

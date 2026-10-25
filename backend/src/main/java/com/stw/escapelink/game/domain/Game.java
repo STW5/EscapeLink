@@ -64,6 +64,12 @@ public class Game {
         return status == GameStatus.RUNNING;
     }
 
+    public void update(String title, Instant startAt, Instant endAt) {
+        this.title = title;
+        this.startAt = startAt;
+        this.endAt = endAt;
+    }
+
     public void start() {
         this.status = GameStatus.RUNNING;
     }

@@ -2,12 +2,16 @@ package com.stw.escapelink.admin.controller;
 
 import com.stw.escapelink.admin.dto.CreateGameRequest;
 import com.stw.escapelink.admin.dto.GameResponse;
+import com.stw.escapelink.admin.dto.UpdateGameRequest;
 import com.stw.escapelink.admin.service.AdminGameService;
 import com.stw.escapelink.global.response.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,6 +34,18 @@ public class AdminGameController {
     @GetMapping("/api/admin/games")
     public ApiResponse<List<GameResponse>> listGames() {
         return ApiResponse.ok(adminGameService.listGames());
+    }
+
+    @PutMapping("/api/admin/games/{gameId}")
+    public ApiResponse<GameResponse> updateGame(Authentication authentication, @PathVariable Long gameId,
+                                                 @Valid @RequestBody UpdateGameRequest request) {
+        return ApiResponse.ok(adminGameService.updateGame(authentication.getName(), gameId, request));
+    }
+
+    @DeleteMapping("/api/admin/games/{gameId}")
+    public ApiResponse<Void> deleteGame(Authentication authentication, @PathVariable Long gameId) {
+        adminGameService.deleteGame(authentication.getName(), gameId);
+        return ApiResponse.ok();
     }
 
     @PostMapping("/api/admin/games/{gameId}/start")
