@@ -6,7 +6,7 @@ import { api, ApiError } from "@/lib/api";
 import { createClientId } from "@/lib/device";
 import { useRefreshOnResume } from "@/lib/connectivity";
 import { useTeamChannel } from "@/lib/ws";
-import type { AnswerResult, QuizDetail, QuizProgressStatus, TeamState } from "@/lib/types";
+import type { AnswerResult, QuizDetail, QuizList, QuizProgressStatus, TeamState } from "@/lib/types";
 import StatusBadge from "@/components/StatusBadge";
 import ImageAnswerForm from "@/components/ImageAnswerForm";
 
@@ -34,6 +34,7 @@ function QuizDetailView() {
   const [feedback, setFeedback] = useState<
     { kind: "wrong" | "error"; message: string } | null
   >(null);
+  const [justSolved, setJustSolved] = useState(false);
   const [cooldownUntil, setCooldownUntil] = useState<number | null>(null);
   const [cooldownSecondsLeft, setCooldownSecondsLeft] = useState(0);
   const pendingAnswerRef = useRef<{
@@ -118,6 +119,7 @@ function QuizDetailView() {
         }
       );
       pendingAnswerRef.current = null;
+      if (result.status === "COMPLETED") setJustSolved(true);
       setQuiz({ ...quiz, status: result.status });
       setAnswer("");
     } catch (e) {
@@ -148,14 +150,24 @@ function QuizDetailView() {
   }
 
   if (loadError) {
-    return <Centered><p className="text-red-400">{loadError}</p></Centered>;
+    return (
+      <Centered>
+        <div className="text-center space-y-3 px-6">
+          <p className="text-red-400">{loadError}</p>
+          <button onClick={load} className="rounded-lg bg-neutral-800 border border-neutral-700 px-4 py-2 text-sm">
+            다시 시도
+          </button>
+        </div>
+      </Centered>
+    );
   }
   if (!quiz) {
     return <Centered>불러오는 중...</Centered>;
   }
 
   const solved = quiz.status === "COMPLETED";
-  const disabled = submitting || solved || cooldownSecondsLeft > 0;
+  const disabled = submitting || solved;
+  const submitBlocked = disabled || cooldownSecondsLeft > 0;
 
   return (
     <main className="flex-1 px-5 py-8 max-w-md mx-auto w-full space-y-6">
@@ -179,9 +191,7 @@ function QuizDetailView() {
       <HintBox quiz={quiz} />
 
       {solved ? (
-        <p className="text-center text-emerald-400 font-medium py-4">
-          이미 완료한 문제입니다.
-        </p>
+        <SolvedPanel quizId={quiz.id} justSolved={justSolved} />
       ) : quiz.type === "IMAGE" ? (
         <ImageAnswerForm
           quiz={quiz}
@@ -196,10 +206,17 @@ function QuizDetailView() {
             placeholder="정답 입력"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
-            disabled={disabled}
+            disabled={submitting}
+            autoCapitalize="none"
+            autoCorrect="off"
+            autoComplete="off"
+            spellCheck={false}
+            enterKeyHint="send"
+            aria-label="정답"
           />
           {feedback && (
             <p
+              role="alert"
               className={
                 feedback.kind === "wrong"
                   ? "text-amber-400 text-sm"
@@ -207,11 +224,12 @@ function QuizDetailView() {
               }
             >
               {feedback.message}
+              {feedback.kind === "wrong" && cooldownSecondsLeft > 0 && " 다음 답을 미리 입력해 둘 수 있어요."}
             </p>
           )}
           <button
             type="submit"
-            disabled={disabled || !answer.trim()}
+            disabled={submitBlocked || !answer.trim()}
             className="w-full rounded-lg bg-indigo-500 py-3 font-semibold disabled:opacity-40"
           >
             {cooldownSecondsLeft > 0
@@ -221,6 +239,52 @@ function QuizDetailView() {
         </form>
       )}
     </main>
+  );
+}
+
+/** After a quiz is solved: celebrate (only right after solving) and point at what to do next. */
+function SolvedPanel({ quizId, justSolved }: { quizId: number; justSolved: boolean }) {
+  const router = useRouter();
+  const [nextQuizId, setNextQuizId] = useState<number | null | undefined>(undefined);
+
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .get<QuizList>("/api/quizzes")
+      .then((list) => {
+        if (cancelled) return;
+        const index = list.quizzes.findIndex((q) => q.id === quizId);
+        const ordered = [...list.quizzes.slice(index + 1), ...list.quizzes.slice(0, Math.max(index, 0))];
+        setNextQuizId(ordered.find((q) => q.status === "UNSOLVED")?.id ?? null);
+      })
+      .catch(() => !cancelled && setNextQuizId(null));
+    return () => {
+      cancelled = true;
+    };
+  }, [quizId]);
+
+  return (
+    <div className="rounded-xl bg-emerald-950/40 border border-emerald-800/60 p-5 text-center space-y-4">
+      <p className="text-emerald-300 font-semibold text-lg">
+        {justSolved ? "🎉 정답입니다!" : "이미 완료한 문제입니다."}
+      </p>
+      <div className="space-y-2">
+        {typeof nextQuizId === "number" && (
+          <button
+            onClick={() => router.push(`/quiz?id=${nextQuizId}`)}
+            className="w-full rounded-lg bg-indigo-500 py-3 font-semibold"
+          >
+            다음 문제로
+          </button>
+        )}
+        <button
+          onClick={() => router.push("/quizzes")}
+          className="w-full rounded-lg bg-neutral-800 border border-neutral-700 py-3 text-sm"
+        >
+          {nextQuizId === null ? "문제 목록으로 (남은 문제 없음)" : "문제 목록으로"}
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -234,6 +298,7 @@ function HintBox({ quiz }: { quiz: QuizDetail }) {
   }, [quiz.hintAvailable, quiz.hintAvailableAt]);
 
   if (quiz.hintAvailable) {
+    if (!quiz.hint?.trim()) return null;
     return (
       <div className="rounded-lg bg-neutral-900 border border-neutral-800 px-4 py-3 text-sm">
         <p className="text-neutral-400 mb-1">힌트</p>

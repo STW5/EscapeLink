@@ -6,6 +6,7 @@ import { adminApi, AdminApiError } from "@/lib/adminApi";
 import type { Game, QuizAdmin, TeamSummary } from "@/lib/adminTypes";
 import type { QuizType } from "@/lib/types";
 import { useAdminChannel } from "@/lib/ws";
+import { useConfirm } from "@/lib/useConfirm";
 import AdminNav from "@/components/AdminNav";
 import TeamQrCode from "@/components/TeamQrCode";
 
@@ -25,6 +26,14 @@ const STATUS_LABELS: Record<Game["status"], string> = {
 
 const INPUT = "rounded-lg bg-neutral-950 border border-neutral-700 px-3 py-2 text-sm";
 const BUTTON_SUBTLE = "rounded-lg bg-neutral-800 border border-neutral-700 px-3 py-1.5 text-xs disabled:opacity-40";
+
+/** ISO instant -> value for <input type="datetime-local"> in the browser's timezone. */
+function toLocalInput(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
 function errorMessage(e: unknown, fallback: string) {
   return e instanceof AdminApiError ? e.message : fallback;
@@ -103,8 +112,10 @@ function GameHeader({
   onChanged: () => void;
   onDeleted: () => void;
 }) {
+  const [confirm, dialog] = useConfirm();
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(game.title);
+  const [endAt, setEndAt] = useState(toLocalInput(game.endAt));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -126,7 +137,12 @@ function GameHeader({
     e.preventDefault();
     if (!title.trim()) return;
     const ok = await run(
-      () => adminApi.updateGame(game.id, { title: title.trim(), startAt: game.startAt, endAt: game.endAt }),
+      () =>
+        adminApi.updateGame(game.id, {
+          title: title.trim(),
+          startAt: game.startAt,
+          endAt: endAt ? new Date(endAt).toISOString() : null,
+        }),
       "수정에 실패했습니다."
     );
     if (ok) {
@@ -136,38 +152,75 @@ function GameHeader({
   }
 
   async function handleDelete() {
-    if (!window.confirm(`'${game.title}' 게임을 삭제할까요?\n팀, 문제, 진행 기록이 모두 삭제되며 되돌릴 수 없습니다.`)) return;
+    if (!(await confirm(`'${game.title}' 게임을 삭제할까요?\n팀, 문제, 진행 기록이 모두 삭제되며 되돌릴 수 없습니다.`, { confirmLabel: "삭제", danger: true }))) return;
     if (await run(() => adminApi.deleteGame(game.id), "삭제에 실패했습니다.")) onDeleted();
   }
 
   async function handleStart() {
-    if (!window.confirm("게임을 시작할까요? 참가자들이 바로 문제를 풀 수 있게 됩니다.")) return;
+    if (!game.endAt) {
+      const ok = await confirm("종료 시각이 설정되지 않았습니다. 참가자 화면에 남은 시간이 표시되지 않아요.\n그래도 시작할까요?", { confirmLabel: "시작" });
+      if (!ok) return;
+    } else if (!(await confirm("게임을 시작할까요? 참가자들이 바로 문제를 풀 수 있게 됩니다.", { confirmLabel: "시작" }))) {
+      return;
+    }
     if (await run(() => adminApi.startGame(game.id), "시작에 실패했습니다.")) onChanged();
   }
 
   async function handleFinish() {
-    if (!window.confirm("게임을 종료할까요? 종료 후에는 참가자가 답을 제출할 수 없습니다.")) return;
+    if (!(await confirm("게임을 종료할까요? 종료 후에는 참가자가 답을 제출할 수 없습니다.", { confirmLabel: "종료", danger: true }))) return;
     if (await run(() => adminApi.finishGame(game.id), "종료에 실패했습니다.")) onChanged();
   }
 
   return (
     <header className="space-y-2">
+      {dialog}
       <a href="/admin/games" className="text-sm text-neutral-500">← 게임 목록</a>
       <div className="flex items-start justify-between gap-3">
         {editing ? (
-          <form onSubmit={handleSave} className="flex flex-1 gap-2">
-            <input className={`${INPUT} flex-1`} value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
-            <button type="submit" disabled={busy || !title.trim()} className="rounded-lg bg-indigo-500 px-3 text-sm font-semibold disabled:opacity-40">
-              저장
-            </button>
-            <button type="button" onClick={() => { setEditing(false); setTitle(game.title); }} className={BUTTON_SUBTLE}>
-              취소
-            </button>
+          <form onSubmit={handleSave} className="flex-1 space-y-2">
+            <input className={`${INPUT} w-full`} value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
+            <div className="space-y-1.5">
+              <label className="flex items-center gap-2 text-xs text-neutral-400">
+                종료 시각
+                <input
+                  type="datetime-local"
+                  className={`${INPUT} flex-1`}
+                  value={endAt}
+                  onChange={(e) => setEndAt(e.target.value)}
+                />
+              </label>
+              <div className="flex flex-wrap gap-2 text-xs">
+                {[60, 90, 120].map((minutes) => (
+                  <button key={minutes} type="button" onClick={() => setEndAt(toLocalInput(new Date(Date.now() + minutes * 60000).toISOString()))} className={BUTTON_SUBTLE}>
+                    지금부터 {minutes}분
+                  </button>
+                ))}
+                {endAt && (
+                  <button type="button" onClick={() => setEndAt("")} className={BUTTON_SUBTLE}>
+                    시각 지우기
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button type="submit" disabled={busy || !title.trim()} className="rounded-lg bg-indigo-500 px-4 py-1.5 text-sm font-semibold disabled:opacity-40">
+                저장
+              </button>
+              <button type="button" onClick={() => { setEditing(false); setTitle(game.title); setEndAt(toLocalInput(game.endAt)); }} className={BUTTON_SUBTLE}>
+                취소
+              </button>
+            </div>
           </form>
         ) : (
           <div>
             <h1 className="text-xl font-bold">{game.title}</h1>
-            <p className="text-sm text-neutral-400">{STATUS_LABELS[game.status]}</p>
+            <p className="text-sm text-neutral-400">
+              {STATUS_LABELS[game.status]}
+              <span className="text-neutral-500">
+                {" · "}
+                {game.endAt ? `종료 ${new Date(game.endAt).toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}` : "종료 시각 미설정"}
+              </span>
+            </p>
           </div>
         )}
         <div className="flex gap-2 shrink-0">
@@ -185,7 +238,7 @@ function GameHeader({
       </div>
       {!editing && (
         <div className="flex gap-2">
-          <button onClick={() => setEditing(true)} className={BUTTON_SUBTLE}>이름 수정</button>
+          <button onClick={() => setEditing(true)} className={BUTTON_SUBTLE}>이름·종료 시각 수정</button>
           <button
             onClick={handleDelete}
             disabled={busy || game.status === "RUNNING"}
@@ -271,6 +324,7 @@ function TeamCard({
   gameRunning: boolean;
   onChanged: () => void;
 }) {
+  const [confirm, dialog] = useConfirm();
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(team.teamName);
   const [busy, setBusy] = useState(false);
@@ -302,21 +356,22 @@ function TeamCard({
     }
   }
 
-  function handleRegenerate() {
-    if (!window.confirm(`'${team.teamName}' 팀의 초대코드를 다시 발급할까요?\n기존 QR 코드는 더 이상 사용할 수 없습니다. (이미 접속한 기기는 유지됩니다)`)) return;
+  async function handleRegenerate() {
+    if (!(await confirm(`'${team.teamName}' 팀의 초대코드를 다시 발급할까요?\n기존 QR 코드는 더 이상 사용할 수 없습니다. (이미 접속한 기기는 유지됩니다)`, { confirmLabel: "재발급" }))) return;
     run(() => adminApi.regenerateInvite(team.teamId), "재발급에 실패했습니다.");
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     const warning = completed > 0 || team.finalStageUnlocked
       ? "\n진행 기록(풀이 상태, 제출 이미지)도 함께 삭제됩니다."
       : "";
-    if (!window.confirm(`'${team.teamName}' 팀을 삭제할까요?${warning}\n되돌릴 수 없습니다.`)) return;
+    if (!(await confirm(`'${team.teamName}' 팀을 삭제할까요?${warning}\n되돌릴 수 없습니다.`, { confirmLabel: "삭제", danger: true }))) return;
     run(() => adminApi.deleteTeam(team.teamId), "삭제에 실패했습니다.");
   }
 
   return (
     <div className="rounded-xl bg-neutral-900 border border-neutral-800 p-4 space-y-3">
+      {dialog}
       <div className="flex gap-4">
         <TeamQrCode inviteToken={team.inviteToken} />
         <div className="space-y-1 text-sm min-w-0">
@@ -469,6 +524,7 @@ function QuizSection({
 }
 
 function QuizItem({ quiz, onChanged }: { quiz: QuizAdmin; onChanged: () => void }) {
+  const [confirm, dialog] = useConfirm();
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(quiz.title);
   const [content, setContent] = useState(quiz.content);
@@ -514,7 +570,7 @@ function QuizItem({ quiz, onChanged }: { quiz: QuizAdmin; onChanged: () => void 
   }
 
   async function handleDelete() {
-    if (!window.confirm(`'${quiz.title}' 문제를 삭제할까요?\n이 문제의 팀별 진행 기록도 함께 삭제됩니다.`)) return;
+    if (!(await confirm(`'${quiz.title}' 문제를 삭제할까요?\n이 문제의 팀별 진행 기록도 함께 삭제됩니다.`, { confirmLabel: "삭제", danger: true }))) return;
     setBusy(true);
     setError(null);
     try {
@@ -570,6 +626,7 @@ function QuizItem({ quiz, onChanged }: { quiz: QuizAdmin; onChanged: () => void 
 
   return (
     <li className="rounded-lg bg-neutral-900 border border-neutral-800 px-4 py-3 text-sm">
+      {dialog}
       <div className="flex items-center justify-between gap-2">
         <span className="font-medium">
           #{quiz.orderNo} {quiz.title}

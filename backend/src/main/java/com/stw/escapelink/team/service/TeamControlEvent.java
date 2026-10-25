@@ -15,6 +15,14 @@ public record TeamControlEvent(Long teamId, String type, Long quizId) {
         return new TeamControlEvent(teamId, "FORCE_FINAL_STAGE", null);
     }
 
+    public static TeamControlEvent gameStarted(Long teamId) {
+        return new TeamControlEvent(teamId, "GAME_STARTED", null);
+    }
+
+    public static TeamControlEvent gameFinished(Long teamId) {
+        return new TeamControlEvent(teamId, "GAME_FINISHED", null);
+    }
+
     public static TeamControlEvent finalStageEnabled(Long teamId) {
         return new TeamControlEvent(teamId, "FINAL_STAGE_ENABLED", null);
     }

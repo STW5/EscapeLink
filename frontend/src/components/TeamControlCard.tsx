@@ -4,6 +4,7 @@ import { useState } from "react";
 import { adminApi, AdminApiError } from "@/lib/adminApi";
 import type { TeamSummary } from "@/lib/adminTypes";
 import StatusBadge from "@/components/StatusBadge";
+import { useConfirm } from "@/lib/useConfirm";
 
 export default function TeamControlCard({
   team,
@@ -12,6 +13,7 @@ export default function TeamControlCard({
   team: TeamSummary;
   onChanged: () => void;
 }) {
+  const [confirm, dialog] = useConfirm();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,23 +30,24 @@ export default function TeamControlCard({
     }
   }
 
-  function handleForceComplete(quizId: number) {
-    if (!window.confirm("이 문제를 강제로 통과 처리할까요?")) return;
+  async function handleForceComplete(quizId: number) {
+    if (!(await confirm("이 문제를 강제로 통과 처리할까요?", { confirmLabel: "강제 통과" }))) return;
     run(() => adminApi.forceCompleteQuiz(team.teamId, quizId));
   }
 
-  function handleReset() {
-    if (!window.confirm(`'${team.teamName}' 팀을 초기화할까요? (진행 상태가 전부 미해결로 리셋됩니다)`)) return;
+  async function handleReset() {
+    if (!(await confirm(`'${team.teamName}' 팀을 초기화할까요? (진행 상태가 전부 미해결로 리셋됩니다)`, { confirmLabel: "초기화", danger: true }))) return;
     run(() => adminApi.resetTeam(team.teamId));
   }
 
-  function handleForceFinalStage() {
-    if (!window.confirm(`'${team.teamName}' 팀을 최종 스테이지로 강제 진입시킬까요?`)) return;
+  async function handleForceFinalStage() {
+    if (!(await confirm(`'${team.teamName}' 팀을 최종 스테이지로 강제 진입시킬까요?`, { confirmLabel: "강제 진입" }))) return;
     run(() => adminApi.forceFinalStage(team.teamId));
   }
 
   return (
     <div className="rounded-xl bg-neutral-900 border border-neutral-800 p-4 space-y-3">
+      {dialog}
       <div className="flex items-start justify-between">
         <div>
           <h2 className="font-semibold">{team.teamName}</h2>

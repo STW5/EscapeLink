@@ -7,6 +7,7 @@ import com.stw.escapelink.admin.dto.UpdateGameRequest;
 import com.stw.escapelink.admin.repository.AdminActionLogRepository;
 import com.stw.escapelink.quiz.repository.QuizRepository;
 import com.stw.escapelink.team.repository.TeamRepository;
+import com.stw.escapelink.team.service.TeamControlEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import com.stw.escapelink.admin.dto.GameResponse;
 import com.stw.escapelink.game.domain.Game;
@@ -58,14 +59,19 @@ public class AdminGameService {
     public GameResponse startGame(Long gameId) {
         Game game = getGameOrThrow(gameId);
         game.start();
-        return toResponse(gameRepository.save(game));
+        gameRepository.save(game);
+        // Participants waiting on the "not started yet" screen switch over without a refresh.
+        teamRepository.findByGameId(gameId).forEach(t -> eventPublisher.publishEvent(TeamControlEvent.gameStarted(t.getId())));
+        return toResponse(game);
     }
 
     @Transactional
     public GameResponse finishGame(Long gameId) {
         Game game = getGameOrThrow(gameId);
         game.finish();
-        return toResponse(gameRepository.save(game));
+        gameRepository.save(game);
+        teamRepository.findByGameId(gameId).forEach(t -> eventPublisher.publishEvent(TeamControlEvent.gameFinished(t.getId())));
+        return toResponse(game);
     }
 
     @Transactional

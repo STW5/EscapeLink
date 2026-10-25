@@ -73,6 +73,8 @@ export type ImagePendingMessage = {
 export type TeamControlMessage = {
   type:
     | "QUIZ_FORCE_COMPLETED"
+    | "GAME_STARTED"
+    | "GAME_FINISHED"
     | "TEAM_RESET"
     | "FORCE_FINAL_STAGE"
     | "FINAL_STAGE_ENABLED"

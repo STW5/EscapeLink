@@ -36,7 +36,11 @@ function JoinForm() {
       router.push("/quizzes");
     } catch (e) {
       setStatus("error");
-      setErrorMessage(e instanceof ApiError ? e.message : "접속에 실패했습니다.");
+      if (e instanceof ApiError && e.code === "INVALID_INVITE_TOKEN") {
+        setErrorMessage("유효하지 않은 초대 코드예요. QR 코드가 새로 발급되었을 수 있으니 운영진에게 최신 QR을 요청해 주세요.");
+      } else {
+        setErrorMessage(e instanceof ApiError ? e.message : "접속에 실패했습니다.");
+      }
     }
   }
 
@@ -75,6 +79,11 @@ function JoinForm() {
           <input
             className="w-full rounded-lg bg-neutral-900 border border-neutral-700 px-4 py-3 text-center tracking-wide"
             placeholder="초대 코드 직접 입력"
+            aria-label="초대 코드"
+            autoCapitalize="none"
+            autoCorrect="off"
+            autoComplete="off"
+            spellCheck={false}
             value={inviteToken}
             onChange={(e) => setInviteToken(e.target.value)}
           />
