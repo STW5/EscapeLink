@@ -13,6 +13,8 @@ public record QuizDetailResponse(
         QuizProgressStatus status,
         boolean hintAvailable,
         Instant hintAvailableAt,
-        String hint
+        String hint,
+        /** IMAGE quizzes only: why the latest submission of the current run was rejected, if it was. */
+        String rejectReason
 ) {
 }

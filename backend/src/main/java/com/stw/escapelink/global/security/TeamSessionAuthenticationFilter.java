@@ -8,6 +8,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -32,12 +34,23 @@ public class TeamSessionAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        findCookie(request, properties.getCookieName())
-                .flatMap(teamSessionRepository::findBySessionToken)
-                .filter(session -> session.isValid(Instant.now()))
-                .ifPresent(this::authenticate);
+        // An already authenticated principal (e.g. an admin session) wins: a participant
+        // cookie left over in the same browser must not demote it to a team.
+        if (!hasAuthenticatedPrincipal()) {
+            findCookie(request, properties.getCookieName())
+                    .flatMap(teamSessionRepository::findBySessionToken)
+                    .filter(session -> session.isValid(Instant.now()))
+                    .ifPresent(this::authenticate);
+        }
 
         filterChain.doFilter(request, response);
+    }
+
+    private boolean hasAuthenticatedPrincipal() {
+        Authentication current = SecurityContextHolder.getContext().getAuthentication();
+        return current != null
+                && current.isAuthenticated()
+                && !(current instanceof AnonymousAuthenticationToken);
     }
 
     private void authenticate(TeamSession session) {

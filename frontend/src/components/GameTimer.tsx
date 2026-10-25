@@ -22,13 +22,22 @@ export default function GameTimer({
     return () => clearInterval(id);
   }, []);
 
-  if (status === "READY" || !endAt) {
+  if (status === "READY") {
     return <p className="text-lg font-semibold text-neutral-400">대기 중</p>;
+  }
+
+  if (status === "FINISHED") {
+    return <p className="text-lg font-semibold text-neutral-400">게임 종료</p>;
+  }
+
+  // Running without an end time: started, just no countdown to show.
+  if (!endAt) {
+    return <p className="text-lg font-semibold text-emerald-400">진행 중</p>;
   }
 
   const remainingMs = Math.max(new Date(endAt).getTime() - now, 0);
 
-  if (status === "FINISHED" || remainingMs <= 0) {
+  if (remainingMs <= 0) {
     return <p className="text-lg font-semibold text-neutral-400">게임 종료</p>;
   }
 

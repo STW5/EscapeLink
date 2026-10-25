@@ -58,6 +58,9 @@ export default function SubmissionCard({
           <span className="font-semibold">{submission.teamName}</span>
           <span className="text-sm text-neutral-400">{submission.quizTitle}</span>
         </div>
+        <p className="whitespace-pre-wrap rounded-lg bg-neutral-950 border border-neutral-800 px-3 py-2 text-sm text-neutral-300">
+          {submission.quizContent}
+        </p>
         <p className="text-xs text-neutral-500">
           제출 #{submission.submissionVersion} ·{" "}
           {new Date(submission.createdAt).toLocaleString("ko-KR")}

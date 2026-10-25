@@ -10,6 +10,9 @@ import com.stw.escapelink.quiz.dto.QuizListItemResponse;
 import com.stw.escapelink.quiz.dto.QuizListResponse;
 import com.stw.escapelink.quiz.repository.QuizProgressRepository;
 import com.stw.escapelink.quiz.repository.QuizRepository;
+import com.stw.escapelink.submission.domain.ImageSubmission;
+import com.stw.escapelink.submission.domain.ImageSubmissionStatus;
+import com.stw.escapelink.submission.repository.ImageSubmissionRepository;
 import com.stw.escapelink.team.domain.Team;
 import com.stw.escapelink.team.repository.TeamRepository;
 import org.springframework.stereotype.Service;
@@ -27,9 +30,12 @@ public class QuizQueryService {
     private final TeamRepository teamRepository;
     private final QuizRepository quizRepository;
     private final QuizProgressRepository quizProgressRepository;
+    private final ImageSubmissionRepository imageSubmissionRepository;
 
     public QuizQueryService(TeamRepository teamRepository, QuizRepository quizRepository,
-                             QuizProgressRepository quizProgressRepository) {
+                             QuizProgressRepository quizProgressRepository,
+                             ImageSubmissionRepository imageSubmissionRepository) {
+        this.imageSubmissionRepository = imageSubmissionRepository;
         this.teamRepository = teamRepository;
         this.quizRepository = quizRepository;
         this.quizProgressRepository = quizProgressRepository;
@@ -55,6 +61,18 @@ public class QuizQueryService {
                 .toList();
 
         return new QuizListResponse(team.getGameId(), team.getId(), items);
+    }
+
+    /** A rejection only matters until the team submits again or is approved, so look at the latest one. */
+    private String rejectReasonFor(Team team, Quiz quiz, QuizProgress progress) {
+        if (!quiz.isImage() || progress.getStatus() != QuizProgressStatus.UNSOLVED) {
+            return null;
+        }
+        return imageSubmissionRepository
+                .findTopByTeamIdAndQuizIdAndRunNoOrderBySubmissionVersionDesc(team.getId(), quiz.getId(), team.getCurrentRunNo())
+                .filter(s -> s.getStatus() == ImageSubmissionStatus.REJECTED)
+                .map(ImageSubmission::getRejectReason)
+                .orElse(null);
     }
 
     /**
@@ -88,7 +106,8 @@ public class QuizQueryService {
                 progress.getStatus(),
                 hintAvailable,
                 hintAvailableAt,
-                hintAvailable ? quiz.getHint() : null
+                hintAvailable ? quiz.getHint() : null,
+                rejectReasonFor(team, quiz, progress)
         );
     }
 }

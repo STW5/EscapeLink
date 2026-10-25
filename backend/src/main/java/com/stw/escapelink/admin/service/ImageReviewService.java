@@ -151,12 +151,13 @@ public class ImageReviewService {
     private PendingSubmissionResponse toResponse(ImageSubmission submission) {
         String teamName = teamRepository.findById(submission.getTeamId())
                 .map(Team::getName).orElse("(알 수 없음)");
-        String quizTitle = quizRepository.findById(submission.getQuizId())
-                .map(Quiz::getTitle).orElse("(알 수 없음)");
+        Quiz quiz = quizRepository.findById(submission.getQuizId()).orElse(null);
+        String quizTitle = quiz == null ? "(알 수 없음)" : quiz.getTitle();
+        String quizContent = quiz == null ? "" : quiz.getContent();
 
         return new PendingSubmissionResponse(
                 submission.getId(), submission.getTeamId(), teamName,
-                submission.getQuizId(), quizTitle, submission.getSubmissionVersion(), submission.getCreatedAt());
+                submission.getQuizId(), quizTitle, quizContent, submission.getSubmissionVersion(), submission.getCreatedAt());
     }
 
     private record ReviewContext(ImageSubmission submission, QuizProgress progress) {

@@ -1,6 +1,13 @@
 const MAX_DIMENSION = 1080;
 const MAX_BYTES = 2 * 1024 * 1024;
 const OUTPUT_MIME = "image/jpeg";
+const SERVER_ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+export class UnsupportedImageError extends Error {
+  constructor() {
+    super("이 사진 형식은 지원하지 않아요. 카메라로 직접 촬영하거나 JPEG/PNG 사진을 선택해 주세요.");
+  }
+}
 
 /**
  * Resizes to a 1080px long edge and re-encodes as JPEG, stepping quality
@@ -12,7 +19,12 @@ export async function compressImage(file: File): Promise<File> {
   try {
     bitmap = await createImageBitmap(file);
   } catch {
-    return file;
+    // The browser cannot decode it (e.g. HEIC outside Safari). Only formats the
+    // server accepts may pass through untouched; anything else gets a clear message.
+    if (SERVER_ACCEPTED_TYPES.includes(file.type)) {
+      return file;
+    }
+    throw new UnsupportedImageError();
   }
 
   const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));

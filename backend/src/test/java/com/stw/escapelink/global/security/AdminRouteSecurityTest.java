@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Instant;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -55,5 +56,21 @@ class AdminRouteSecurityTest extends AbstractIntegrationTest {
                         .cookie(new Cookie("ESCAPELINK_TEAM_SESSION", token)))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("ACCESS_DENIED"));
+    }
+
+    @Test
+    void adminKeepsAccessWhenTheSameBrowserAlsoHoldsAParticipantCookie() throws Exception {
+        Instant now = Instant.now();
+        Game game = gameRepository.save(
+                new Game("admin-and-team", GameStatus.RUNNING, now, now.plusSeconds(3600)));
+        Team team = teamRepository.save(new Team(game.getId(), "participant", "admin-and-team-invite"));
+        String token = "participant-and-admin-token";
+        teamSessionRepository.save(new TeamSession(team.getId(), token, "test-device", now.plusSeconds(3600)));
+
+        // An admin who also scanned a team QR on the same device must not be demoted to a participant.
+        mockMvc.perform(get("/api/admin/teams")
+                        .with(user("admin").roles("ADMIN"))
+                        .cookie(new Cookie("ESCAPELINK_TEAM_SESSION", token)))
+                .andExpect(status().isOk());
     }
 }

@@ -48,7 +48,11 @@ export default function QuizzesPage() {
     (event: TeamEvent) => {
       const quizId = "quizId" in event ? event.quizId : null;
       const title = quizListRef.current?.quizzes.find((q) => q.id === quizId)?.title;
-      const message = describeEvent(event.type, title);
+      const message = describeEvent(
+        event.type,
+        title,
+        "rejectReason" in event ? event.rejectReason : null
+      );
       if (message) setToast(message);
       loadAll();
     },
@@ -151,7 +155,7 @@ export default function QuizzesPage() {
   );
 }
 
-function describeEvent(type: TeamEvent["type"], title?: string): string | null {
+function describeEvent(type: TeamEvent["type"], title?: string, reason?: string | null): string | null {
   const name = title ? `'${title}' ` : "";
   switch (type) {
     case "QUIZ_COMPLETED":
@@ -161,7 +165,7 @@ function describeEvent(type: TeamEvent["type"], title?: string): string | null {
     case "IMAGE_APPROVED":
       return `${name}사진이 승인되었어요! 🎉`;
     case "IMAGE_REJECTED":
-      return `${name}사진이 반려되었어요. 다시 제출해 주세요.`;
+      return `${name}사진이 반려되었어요${reason ? ` (사유: ${reason})` : ""}. 다시 제출해 주세요.`;
     case "FINAL_STAGE_ENABLED":
     case "FORCE_FINAL_STAGE":
       return "최종 미션이 열렸어요!";

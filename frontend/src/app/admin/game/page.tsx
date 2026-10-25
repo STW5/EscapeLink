@@ -428,7 +428,36 @@ function QuizSection({
   const [hintDelaySeconds, setHintDelaySeconds] = useState(0);
   const [answer, setAnswer] = useState("");
   const [creating, setCreating] = useState(false);
+  const [moving, setMoving] = useState(false);
+  const [moveError, setMoveError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  /** Swaps with the neighbour, then renumbers 1..n so duplicated order numbers cannot make a move a no-op. */
+  async function handleMove(index: number, direction: -1 | 1) {
+    const reordered = [...quizzes];
+    const target = index + direction;
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+
+    setMoving(true);
+    setMoveError(null);
+    try {
+      for (const [position, quiz] of reordered.entries()) {
+        if (quiz.orderNo === position + 1) continue;
+        await adminApi.updateQuiz(quiz.id, {
+          title: quiz.title,
+          content: quiz.content,
+          orderNo: position + 1,
+          hint: quiz.hint ?? "",
+          hintDelaySeconds: quiz.hintDelaySeconds,
+        });
+      }
+    } catch (e) {
+      setMoveError(errorMessage(e, "순서를 바꾸지 못했습니다."));
+    } finally {
+      setMoving(false);
+      onChanged();
+    }
+  }
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
@@ -513,9 +542,17 @@ function QuizSection({
         </button>
       </form>
 
+      {moveError && <p className="text-red-400 text-sm">{moveError}</p>}
       <ul className="space-y-2">
-        {quizzes.map((quiz) => (
-          <QuizItem key={quiz.id} quiz={quiz} onChanged={onChanged} />
+        {quizzes.map((quiz, index) => (
+          <QuizItem
+            key={quiz.id}
+            quiz={quiz}
+            onChanged={onChanged}
+            onMove={moving ? undefined : (direction) => handleMove(index, direction)}
+            canMoveUp={index > 0}
+            canMoveDown={index < quizzes.length - 1}
+          />
         ))}
         {quizzes.length === 0 && <p className="text-neutral-500 text-sm">아직 문제가 없습니다.</p>}
       </ul>
@@ -523,7 +560,19 @@ function QuizSection({
   );
 }
 
-function QuizItem({ quiz, onChanged }: { quiz: QuizAdmin; onChanged: () => void }) {
+function QuizItem({
+  quiz,
+  onChanged,
+  onMove,
+  canMoveUp,
+  canMoveDown,
+}: {
+  quiz: QuizAdmin;
+  onChanged: () => void;
+  onMove?: (direction: -1 | 1) => void;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+}) {
   const [confirm, dialog] = useConfirm();
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(quiz.title);
@@ -643,6 +692,22 @@ function QuizItem({ quiz, onChanged }: { quiz: QuizAdmin; onChanged: () => void 
       {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
       <div className="flex gap-2 mt-3">
         <button onClick={startEditing} disabled={busy} className={BUTTON_SUBTLE}>수정</button>
+        <button
+          onClick={() => onMove?.(-1)}
+          disabled={busy || !onMove || !canMoveUp}
+          aria-label="위로 이동"
+          className={BUTTON_SUBTLE}
+        >
+          ↑
+        </button>
+        <button
+          onClick={() => onMove?.(1)}
+          disabled={busy || !onMove || !canMoveDown}
+          aria-label="아래로 이동"
+          className={BUTTON_SUBTLE}
+        >
+          ↓
+        </button>
         <button onClick={handleDelete} disabled={busy} className={`${BUTTON_SUBTLE} text-red-400`}>삭제</button>
       </div>
     </li>

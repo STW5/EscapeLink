@@ -6,6 +6,7 @@ export type PendingSubmission = {
   teamName: string;
   quizId: number;
   quizTitle: string;
+  quizContent: string;
   submissionVersion: number;
   createdAt: string;
 };

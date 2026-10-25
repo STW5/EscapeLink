@@ -44,6 +44,7 @@ export type QuizDetail = {
   hintAvailable: boolean;
   hintAvailableAt: string | null;
   hint: string | null;
+  rejectReason: string | null;
 };
 
 export type AnswerResult = {
@@ -82,6 +83,8 @@ export type TeamControlMessage = {
     | "IMAGE_APPROVED"
     | "IMAGE_REJECTED";
   quizId: number | null;
+  /** Present on IMAGE_REJECTED. */
+  rejectReason?: string | null;
 };
 
 export type TeamEvent = QuizCompletedMessage | ImagePendingMessage | TeamControlMessage;

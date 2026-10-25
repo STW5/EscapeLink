@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { adminApi, AdminApiError } from "@/lib/adminApi";
-import type { AdminActionLog, AdminActionType } from "@/lib/adminTypes";
+import type { AdminActionLog, AdminActionType, TeamSummary } from "@/lib/adminTypes";
 import { useAdminChannel } from "@/lib/ws";
 import AdminNav from "@/components/AdminNav";
 
@@ -26,11 +26,15 @@ export default function AdminLogsPage() {
   const router = useRouter();
   const [logs, setLogs] = useState<AdminActionLog[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [teams, setTeams] = useState<TeamSummary[]>([]);
+  const [teamId, setTeamId] = useState<number | undefined>(undefined);
 
   const load = useCallback(async () => {
     try {
       await adminApi.me();
-      setLogs(await adminApi.listActionLogs());
+      const [list, teamList] = await Promise.all([adminApi.listActionLogs(teamId), adminApi.listTeams()]);
+      setLogs(list);
+      setTeams(teamList);
       setError(null);
     } catch (e) {
       if (e instanceof AdminApiError) {
@@ -39,7 +43,7 @@ export default function AdminLogsPage() {
       }
       setError("불러오지 못했습니다.");
     }
-  }, [router]);
+  }, [router, teamId]);
 
   useEffect(() => {
     load();
@@ -66,10 +70,25 @@ export default function AdminLogsPage() {
   return (
     <main className="flex-1 px-5 py-6 max-w-2xl mx-auto w-full space-y-6">
       <AdminNav />
-      <h1 className="text-xl font-bold">액션 로그</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-xl font-bold">액션 로그</h1>
+        <select
+          aria-label="팀 필터"
+          value={teamId ?? ""}
+          onChange={(e) => setTeamId(e.target.value ? Number(e.target.value) : undefined)}
+          className="rounded-lg bg-neutral-900 border border-neutral-700 px-3 py-1.5 text-sm"
+        >
+          <option value="">전체 팀</option>
+          {teams.map((team) => (
+            <option key={team.teamId} value={team.teamId}>
+              {team.teamName}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {logs.length === 0 ? (
-        <p className="text-center text-neutral-500 py-12">기록된 액션이 없습니다.</p>
+        <p className="text-center text-neutral-500 py-12">{teamId ? "이 팀의 기록이 없습니다." : "기록된 액션이 없습니다."}</p>
       ) : (
         <ul className="space-y-2">
           {logs.map((log) => (

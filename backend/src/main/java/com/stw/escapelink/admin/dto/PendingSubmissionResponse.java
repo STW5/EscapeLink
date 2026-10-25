@@ -8,6 +8,7 @@ public record PendingSubmissionResponse(
         String teamName,
         Long quizId,
         String quizTitle,
+        String quizContent,
         int submissionVersion,
         Instant createdAt
 ) {
