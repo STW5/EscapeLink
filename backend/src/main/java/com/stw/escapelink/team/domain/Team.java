@@ -11,6 +11,7 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Getter
@@ -90,7 +91,7 @@ public class Team {
         this.finalStageUnlocked = true;
         this.finalStageForced = true;
         if (this.finalStageEnteredAt == null) {
-            this.finalStageEnteredAt = Instant.now();
+            this.finalStageEnteredAt = now();
         }
     }
 
@@ -98,14 +99,19 @@ public class Team {
     public void unlockFinalStage() {
         this.finalStageUnlocked = true;
         if (this.finalStageEnteredAt == null) {
-            this.finalStageEnteredAt = Instant.now();
+            this.finalStageEnteredAt = now();
         }
     }
 
     /** Idempotent: clearedAt is only ever set once, on the first successful clear. */
     public void clearFinalStage() {
         if (this.finalStageClearedAt == null) {
-            this.finalStageClearedAt = Instant.now();
+            this.finalStageClearedAt = now();
         }
+    }
+
+    /** PostgreSQL stores microseconds; truncating keeps the returned value equal to the persisted one. */
+    private static Instant now() {
+        return Instant.now().truncatedTo(ChronoUnit.MICROS);
     }
 }
