@@ -1,0 +1,10 @@
+services:
+  nginx:
+    networks:
+      - sourceme-network
+      - escapelink-network
+
+networks:
+  escapelink-network:
+    external: true
+    name: escapelink_default

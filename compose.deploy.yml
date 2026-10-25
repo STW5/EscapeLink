@@ -1,0 +1,72 @@
+name: escapelink
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${ESCAPELINK_DB_NAME:-escapelink}
+      POSTGRES_USER: ${ESCAPELINK_DB_USERNAME:-escapelink}
+      POSTGRES_PASSWORD: ${ESCAPELINK_DB_PASSWORD:?ESCAPELINK_DB_PASSWORD is required}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${ESCAPELINK_DB_USERNAME:-escapelink} -d ${ESCAPELINK_DB_NAME:-escapelink}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    # CI publishes ARM64 images; `build` remains for building on the host by hand.
+    image: ${ESCAPELINK_IMAGE_PREFIX:-ghcr.io/stw5}/escapelink-backend:${ESCAPELINK_TAG:-latest}
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${ESCAPELINK_DB_NAME:-escapelink}
+      DB_USERNAME: ${ESCAPELINK_DB_USERNAME:-escapelink}
+      DB_PASSWORD: ${ESCAPELINK_DB_PASSWORD:?ESCAPELINK_DB_PASSWORD is required}
+      ESCAPELINK_UPLOAD_ROOT: /srv/escapelink/uploads
+      ESCAPELINK_CORS_ALLOWED_ORIGINS: ${ESCAPELINK_PUBLIC_ORIGIN:?ESCAPELINK_PUBLIC_ORIGIN is required}
+      ESCAPELINK_TEAM_SESSION_COOKIE_SECURE: ${ESCAPELINK_COOKIE_SECURE:-false}
+      SERVER_SERVLET_SESSION_COOKIE_SECURE: ${ESCAPELINK_COOKIE_SECURE:-false}
+      ESCAPELINK_BOOTSTRAP_ADMIN_USERNAME: ${ESCAPELINK_ADMIN_USERNAME:?ESCAPELINK_ADMIN_USERNAME is required}
+      ESCAPELINK_BOOTSTRAP_ADMIN_PASSWORD: ${ESCAPELINK_ADMIN_PASSWORD:?ESCAPELINK_ADMIN_PASSWORD is required}
+      JAVA_TOOL_OPTIONS: -XX:MaxRAMPercentage=70 -XX:InitialRAMPercentage=20
+    volumes:
+      - uploads:/srv/escapelink/uploads
+    ports:
+      - "127.0.0.1:${ESCAPELINK_BACKEND_PORT:-8082}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  frontend:
+    image: ${ESCAPELINK_IMAGE_PREFIX:-ghcr.io/stw5}/escapelink-frontend:${ESCAPELINK_TAG:-latest}
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ""
+    restart: unless-stopped
+    ports:
+      - "${ESCAPELINK_FRONTEND_PORT:-3002}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      default:
+        aliases:
+          - escapelink-web
+
+volumes:
+  postgres-data:
+  uploads:
